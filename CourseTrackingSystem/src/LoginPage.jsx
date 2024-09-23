@@ -1,99 +1,89 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  TextField, 
-  Button, 
-  Typography, 
-  Container, 
-  createTheme, 
-  ThemeProvider 
-} from '@mui/material';
+import React from 'react';
+import { Box, TextField, Button, Typography, Container } from '@mui/material';
+import { styled, GlobalStyles } from '@mui/system';
+import logo from './assets/KMITL_LOGO.png';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#ff9800', // Orange
-    },
-    background: {
-      default: '#ffffff', // White
-    },
+const OrangeButton = styled(Button)({
+  backgroundColor: '#FF6600',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: '#E65C00',
   },
+  fontSize: '24px',
+});
+
+const Logo = styled('img')({
+  width: '100%',
+  maxWidth: '200px',
+  marginBottom: '20px',
 });
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Login attempt', { email, password });
-  };
-
   return (
-    <ThemeProvider theme={theme}>
+    <>
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: '#FF6600', margin: 0, padding: 0 }, // ตั้ง background color ของ body เฉพาะหน้า LoginPage
+        }}
+      />
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          backgroundColor: '#FF6600',
           minHeight: '100vh',
-          bgcolor: 'background.default',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Container component="main" maxWidth="xs">
+        <Container maxWidth="xs">
           <Box
             sx={{
+              backgroundColor: 'white',
+              padding: 4,
+              borderRadius: 2,
+              boxShadow: 3,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              p: 3,
-              borderRadius: 2,
-              boxShadow: 3,
-              bgcolor: 'white',
             }}
           >
-            <Typography component="h1" variant="h5" color="primary" gutterBottom>
-              เข้าสู่ระบบ
+            <Logo src={logo} alt="KMITL Logo" />
+            <Typography variant="h5" component="h1" gutterBottom>
+              SIGN IN
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="อีเมล"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="รหัสผ่าน"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                เข้าสู่ระบบ
-              </Button>
-            </Box>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <OrangeButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              LOGIN
+            </OrangeButton>
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 };
 
-export default LoginPage
+export default LoginPage;
