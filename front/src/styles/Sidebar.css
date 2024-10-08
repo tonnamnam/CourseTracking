@@ -1,19 +1,46 @@
 .sidebar-container {
-    width: 250px;
+    width: 14%;
     height: 100vh;
     background-color: #FF6600;
     color: #FFFFFF;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.sidebar-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .logo {
-    width: 150px;
-    margin-bottom: 20px;
+    width: 160px;
+    filter: brightness(0) invert(1);
 }
 
-.sidebar-title {
-    margin-bottom: 20px;
+.sidebar-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 30px;
+}
+
+.MuiListItemButton-root {
+    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.MuiTypography-root {
+    font-size: 16px;
+    color: #FFFFFF;
 }

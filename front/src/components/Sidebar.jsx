@@ -1,3 +1,4 @@
+// sidebar.jsx
 import React from "react";
 import "../styles/Sidebar.css";
 import { Typography, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -5,22 +6,23 @@ import { Typography, List, ListItem, ListItemButton, ListItemText } from "@mui/m
 const Sidebar = () => {
     return (
         <div className="sidebar-container">
-            <img src="/src/assets/KMITL_LOGO.png" alt="KMITL Logo" className="logo" />
-            <Typography variant="h6" className="sidebar-title">
-                พระจอมเกล้าลาดกระบัง
-            </Typography>
-            <List sx={{ width: "100%" }}>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemText primary="HOME" />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemText primary="ตารางเรียน" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+            <div className="sidebar-header">
+                <img src="/src/assets/KMITL_LOGO.png" alt="KMITL Logo" className="logo" />
+            </div>
+            <div className="sidebar-menu">
+                <List sx={{ width: "100%" }}>
+                    <ListItem disablePadding>
+                        <ListItemButton>
+                            <Typography>HOME</Typography>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton>
+                            <Typography>ตารางเรียน</Typography>
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+            </div>
         </div>
     );
 };
