@@ -1,0 +1,19 @@
+.sidebar-container {
+    width: 250px;
+    height: 100vh;
+    background-color: #FF6600;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.sidebar-title {
+    margin-bottom: 20px;
+}

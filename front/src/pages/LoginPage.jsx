@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, TextField, Button, Typography, Container } from '@mui/material';
 import { styled, GlobalStyles } from '@mui/system';
-import logo from './assets/KMITL_LOGO.png';
+import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate
+import logo from '../assets/KMITL_LOGO.png';
+import "../styles/LoginPage.css";
 
 const OrangeButton = styled(Button)({
   backgroundColor: '#FF6600',
@@ -19,6 +21,14 @@ const Logo = styled('img')({
 });
 
 const LoginPage = () => {
+  const navigate = useNavigate(); // ใช้ useNavigate สำหรับการนำทาง
+
+  const handleLogin = () => {
+    // Logic สำหรับการตรวจสอบข้อมูลผู้ใช้ (เช่น ตรวจสอบอีเมลและรหัสผ่าน)
+    // หากตรวจสอบผ่านให้นำทางไปยังหน้า home
+    navigate('/home');
+  };
+
   return (
     <>
       <GlobalStyles
@@ -27,26 +37,10 @@ const LoginPage = () => {
         }}
       />
       <Box
-        sx={{
-          backgroundColor: '#FF6600',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="login-container"
       >
         <Container maxWidth="xs">
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              padding: 4,
-              borderRadius: 2,
-              boxShadow: 3,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <Box className="login-box">
             <Logo src={logo} alt="KMITL Logo" />
             <Typography variant="h5" component="h1" gutterBottom>
               SIGN IN
@@ -72,10 +66,11 @@ const LoginPage = () => {
               autoComplete="current-password"
             />
             <OrangeButton
-              type="submit"
+              type="button" // เปลี่ยนจาก submit เป็น button
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleLogin} // เรียกใช้ handleLogin เมื่อคลิกปุ่ม
             >
               LOGIN
             </OrangeButton>

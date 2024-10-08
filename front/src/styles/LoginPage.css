@@ -1,0 +1,23 @@
+body {
+    background-color: #FF6600;
+    margin: 0;
+    padding: 0;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FF6600;
+}
+
+.login-box {
+    background-color: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
