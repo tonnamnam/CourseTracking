@@ -1,9 +1,19 @@
 // sidebar.jsx
 import React from "react";
 import "../styles/Sidebar.css";
-import { Typography, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { Typography, List, ListItem, ListItemButton } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+    const navigate = useNavigate();  // Hook for navigation
+
+    const handleLogout = () => {
+        // Add your logout logic here, e.g., clear user session, token, etc.
+        console.log("User logged out");
+        // After logout, you might want to navigate to the login page or home
+        navigate('/');  // Adjust the route based on your app structure
+    };
+
     return (
         <div className="sidebar-container">
             <div className="sidebar-header">
@@ -12,13 +22,19 @@ const Sidebar = () => {
             <div className="sidebar-menu">
                 <List sx={{ width: "100%" }}>
                     <ListItem disablePadding>
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate('/home')}>
                             <Typography>HOME</Typography>
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton>
+                        <ListItemButton onClick={() => navigate('/schedule')}>
                             <Typography>ตารางเรียน</Typography>
+                        </ListItemButton>
+                    </ListItem>
+                    {/* Add the Logout button here */}
+                    <ListItem disablePadding sx={{ marginTop: "auto" }}>
+                        <ListItemButton onClick={handleLogout}>
+                            <Typography>Logout</Typography>
                         </ListItemButton>
                     </ListItem>
                 </List>

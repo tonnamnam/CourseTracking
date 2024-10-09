@@ -1,6 +1,6 @@
 .sidebar-container {
-    width: 14%;
-    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
     background-color: #FF6600;
     color: #FFFFFF;
     display: flex;
@@ -12,7 +12,7 @@
 .sidebar-header {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
     margin-bottom: 10px;
 }
