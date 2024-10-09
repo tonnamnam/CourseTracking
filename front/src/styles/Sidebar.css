@@ -1,12 +1,14 @@
 .sidebar-container {
-    max-width: 100vw;
-    max-height: 100vh;
+    width: 18%;
+    height: 100vh;
     background-color: #FF6600;
     color: #FFFFFF;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+    box-sizing: border-box;
+    /* เพิ่มเพื่อให้แน่ใจว่า padding จะไม่ทำให้เกินขอบเขต */
 }
 
 .sidebar-header {
@@ -34,10 +36,15 @@
     margin-bottom: 10px;
     border-radius: 8px;
     padding: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, border-radius 0.3s ease;
     width: 100%;
     text-align: left;
-    padding-left: 20px;
+}
+
+.MuiListItemButton-root:hover {
+    background-color: #FF9933;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, border-radius 0.3s ease;
 }
 
 .MuiTypography-root {

@@ -8,17 +8,6 @@ body {
     height: 100vh;
 }
 
-.sidebar-container {
-    width: 250px;
-    height: 100vh;
-    background-color: #FF6600;
-    color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-}
-
 .content {
     flex-grow: 1;
     /* ให้ Main Content ขยายเต็มพื้นที่ */
