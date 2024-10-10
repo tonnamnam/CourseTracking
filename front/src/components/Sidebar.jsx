@@ -19,7 +19,7 @@ const Sidebar = () => {
                 <img src="/src/assets/KMITL_LOGO.png" alt="KMITL Logo" className="logo" />
             </div>
             <div className="sidebar-menu" style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-                <List sx={{ width: "100%" }}>
+                <List sx={{ width: "100" }}>
                     <ListItem disablePadding>
                         <ListItemButton onClick={() => navigate('/home')}>
                             <Typography>HOME</Typography>
@@ -31,6 +31,7 @@ const Sidebar = () => {
                         </ListItemButton>
                     </ListItem>
                 </List>
+                {/* Add the Logout button here */}
                 <ListItem disablePadding>
                     <ListItemButton onClick={handleLogout}>
                         <Typography>Logout</Typography>
