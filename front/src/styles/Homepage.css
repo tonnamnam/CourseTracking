@@ -5,14 +5,18 @@ body {
 
 .homepage-container {
     display: flex;
+    flex-direction: row;
     height: 100vh;
+    /* ทำให้หน้าจอเต็มความสูง */
+    width: 100vw;
 }
 
 .content {
     flex-grow: 1;
-    /* ให้ Main Content ขยายเต็มพื้นที่ */
     padding: 20px;
-    background-color: #f9f9f9;
+    margin-left: 21vw;
+    margin-top: 11vh;
+    overflow-y: auto;
 }
 
 .container {
@@ -56,6 +60,8 @@ body {
 
 .info-box h3 {
     margin-bottom: 10px;
+    text-align: center;
+    margin-top: 0px;
 }
 
 .info-box p {

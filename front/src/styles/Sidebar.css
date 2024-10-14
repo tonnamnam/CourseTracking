@@ -1,5 +1,5 @@
 .sidebar-container {
-    width: 100vw;
+    width: 20vw;
     height: 100vh;
     background-color: #FF6600;
     color: #FFFFFF;
@@ -8,7 +8,10 @@
     align-items: flex-start;
     padding: 20px;
     box-sizing: border-box;
-    /* เพิ่มเพื่อให้แน่ใจว่า padding จะไม่ทำให้เกินขอบเขต */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .sidebar-header {

@@ -1,0 +1,15 @@
+.navbar-container {
+    /* width: calc(100vw - 20vw); */
+    width: 100vw;
+    height: 10vh;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0 20px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}

@@ -1,13 +1,14 @@
 import React from "react";
 import Sidebar from "../components/Sidebar.jsx";
+import Navbar from "../components/Navbar.jsx"
 import "../styles/Homepage.css";
 
 const HomePage = () => {
     return (
         <div className="homepage-container">
             <Sidebar />
+            <Navbar />
             <div className="content">
-                <h1>Homepage</h1>
                 <div className="container">
                     <div className="stat-box">
                         <p>หน่วยกิตทั้งหมด</p>
