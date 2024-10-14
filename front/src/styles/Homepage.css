@@ -14,36 +14,40 @@ body {
 .content {
     flex-grow: 1;
     padding: 20px;
-    margin-left: 21vw;
-    margin-top: 11vh;
+    margin-left: 22vw;
+    margin-top: 12vh;
     overflow-y: auto;
+    /* box-sizing: border-box; */
 }
 
 .container {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 50px;
     margin-bottom: 20px;
 }
 
 .stat-box {
-    background-color: #f0f0f0;
+    background-color: white;
     border-radius: 8px;
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 150px;
+    width: 200px;
+    height: 80px;
 }
 
 .stat-box p {
     margin: 0;
-    font-size: 14px;
+    font-size: 16px;
     color: gray;
+    text-align: center;
 }
 
 .stat-box h2 {
     margin: 10px 0;
-    font-size: 24px;
+    font-size: 28px;
     color: #333;
 }
 
@@ -60,7 +64,7 @@ body {
 
 .info-box h3 {
     margin-bottom: 10px;
-    text-align: center;
+    text-align: left;
     margin-top: 0px;
 }
 
