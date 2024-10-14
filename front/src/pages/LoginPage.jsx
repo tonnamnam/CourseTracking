@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Container, Divider } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, TextField, Button, Typography, Container } from '@mui/material';
 import { styled, GlobalStyles } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/KMITL_LOGO.png';
 import "../styles/LoginPage.css";
 
 // ต้องติดตั้ง @react-oauth/google ก่อน: npm install @react-oauth/google
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
+// import { GoogleLogin } from '@react-oauth/google';
 
 const OrangeButton = styled(Button)({
   backgroundColor: '#FF6600',
@@ -30,45 +29,42 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    // ตั้งค่า Google Client ID
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+  const handleLogin = async () => {
+    navigate('/home')
+    // try {
+    //   const response = await fetch('http://localhost:5000/', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ email, password }),
+    //   });
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const handleLogin = () => {
-    // เพิ่มลอจิกการตรวจสอบอีเมลและรหัสผ่านที่นี่
-    // if (email && password) {
-      // ตรวจสอบกับ backend API
-      navigate('/home');
-    // } else {
-    //   setError('กรุณากรอกอีเมลและรหัสผ่าน');
+    //   const data = await response.json();
+    //   if (response.ok) {
+    //     navigate('/home');
+    //   }
+    // } catch (error) {
+    //   setError('การล็อกอินล้มเหลว กรุณาลองใหม่อีกครั้ง');
     // }
   };
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    const email = decoded.email;
-    
-    if (email.endsWith('@kmitl.ac.th')) {
-      // ดำเนินการล็อกอินสำเร็จ
-      console.log('Logged in with Google:', email);
-      navigate('/home');
-    } else {
-      setError('กรุณาใช้อีเมล @kmitl.ac.th เท่านั้น');
-    }
-  };
+  // const handleGoogleSuccess = (credentialResponse) => {
+  //   const decoded = jwtDecode(credentialResponse.credential);
+  //   const email = decoded.email;
+  //   
+  //   if (email.endsWith('@kmitl.ac.th')) {
+  //     // ดำเนินการล็อกอินสำเร็จ
+  //     console.log('Logged in with Google:', email);
+  //     navigate('/home');
+  //   } else {
+  //     setError('กรุณาใช้อีเมล @kmitl.ac.th เท่านั้น');
+  //   }
+  // };
 
-  const handleGoogleFailure = () => {
-    setError('การล็อกอินด้วย Google ไม่สำเร็จ กรุณาลองอีกครั้ง');
-  };
+  // const handleGoogleFailure = () => {
+  //   setError('การล็อกอินด้วย Google ไม่สำเร็จ กรุณาลองอีกครั้ง');
+  // };
 
   return (
     <>
@@ -122,14 +118,15 @@ const LoginPage = () => {
             >
               LOGIN
             </OrangeButton>
+            {/* ส่วนสำหรับล็อกอินด้วย Google ถูกคอมเมนต์ออก
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleFailure}
-                // ต้องใส่ Client ID ที่ได้จาก Google Developer Console
                 clientId="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
               />
             </Box>
+            */}
           </Box>
         </Container>
       </Box>
