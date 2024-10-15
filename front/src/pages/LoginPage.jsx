@@ -30,23 +30,25 @@ const LoginPage = () => {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
-    navigate('/home')
-    // try {
-    //   const response = await fetch('http://localhost:5000/', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ email, password }),
-    //   });
+    try {
+      const response = await fetch('http://localhost:5000/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    //   const data = await response.json();
-    //   if (response.ok) {
-    //     navigate('/home');
-    //   }
-    // } catch (error) {
-    //   setError('การล็อกอินล้มเหลว กรุณาลองใหม่อีกครั้ง');
-    // }
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('studentid', data.studentid);
+        navigate('/home');
+      } else {
+        setError(data.error || 'การล็อกอินล้มเหลว กรุณาลองใหม่อีกครั้ง');
+      }
+    } catch (error) {
+      setError('การล็อกอินล้มเหลว กรุณาลองใหม่อีกครั้ง');
+    }
   };
 
   // const handleGoogleSuccess = (credentialResponse) => {

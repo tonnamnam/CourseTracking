@@ -6,18 +6,26 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 const Navbar = () => {
     const [username, setUsername] = useState("Guest");
 
-    // ตัวอย่างการใช้ useEffect สำหรับการจำลองดึงข้อมูลผู้ใช้ที่เข้าสู่ระบบ
     useEffect(() => {
-        // สมมุติว่าเราเรียก API เพื่อนำชื่อผู้ใช้
         const fetchUserData = async () => {
-            // ดึงข้อมูลผู้ใช้จาก API หรือ service authentication ที่ใช้
-            // เช่น const user = await someAuthService.getCurrentUser();
-            const user = { name: "ชื่อจริง นามสกุล" }; // ข้อมูลจำลอง
-            setUsername(user.name);
+            const studentid = localStorage.getItem('studentid');
+            if (studentid) {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/student-details?studentid=${studentid}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setUsername(`${data.name} ${data.surname}`); // ตั้งค่า username ด้วย Name และ Surname
+                    } else {
+                        console.log('Fail to fetch user data');
+                    }
+                } catch (error) {
+                    console.log('Error fetching user data:', error);
+                }
+            }
         };
 
         fetchUserData();
-    }, []); // useEffect จะรันเพียงครั้งเดียวหลังจาก component mount
+    }, []);
 
     return (
         <div className="navbar-container">
