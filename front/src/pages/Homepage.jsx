@@ -47,18 +47,44 @@ const HomePage = () => {
                 </div>
                 <div className="container">
                     <div className="info-box">
-                        <h3>GENED</h3>
-                        <p>ที่ต้องเรียน ... หน่วยกิต</p>
-                        <p>ที่เรียนไปแล้ว ... หน่วยกิต</p>
-                        <p>ขาดอีก ... หน่วยกิต</p>
-                        <p>ดูวิชาเรียน</p>
+                        <div className="container-head">
+                            <h3>GENED</h3><p>ดูวิชาเรียน</p>
+                        </div>
+                        <div className="info-row">
+                            <p1>ที่ต้องเรียน</p1>
+                            <p>89</p>
+                            <p>หน่วยกิต</p>
+                        </div>
+                        <div className="info-row">
+                            <p1>ที่เรียนไปแล้ว</p1>
+                            <p>8</p>
+                            <p>หน่วยกิต</p>
+                        </div>
+                        <div className="info-row">
+                            <p1>ขาดอีก</p1>
+                            <p>81</p>
+                            <p>หน่วยกิต</p>
+                        </div>
                     </div>
                     <div className="info-box">
-                        <h3>วิชาภาค</h3>
-                        <p>ที่ต้องเรียน ... หน่วยกิต</p>
-                        <p>ที่เรียนไปแล้ว ... หน่วยกิต</p>
-                        <p>ขาดอีก ... หน่วยกิต</p>
-                        <p>ดูวิชาเรียน</p>
+                        <div className="container-head">
+                            <h3>วิชาภาค</h3><p>ดูวิชาเรียน</p>
+                        </div>
+                        <div className="info-row">
+                            <p1>ที่ต้องเรียน</p1>
+                            <p>89</p>
+                            <p>หน่วยกิต</p>
+                        </div>
+                        <div className="info-row">
+                            <p1>ที่เรียนไปแล้ว</p1>
+                            <p>889</p>
+                            <p>หน่วยกิต</p>
+                        </div>
+                        <div className="info-row">
+                            <p1>ขาดอีก</p1>
+                            <p>81</p>
+                            <p>หน่วยกิต</p>
+                        </div>
                     </div>
                 </div>
             </div>

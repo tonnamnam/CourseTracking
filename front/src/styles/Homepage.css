@@ -1,5 +1,5 @@
 body {
-    background-color: white;
+    background-color: #F6F6F6;
     font-family: Arial, sans-serif;
 }
 
@@ -69,6 +69,37 @@ body {
 }
 
 .info-box p {
-    margin: 5px 0;
+    margin: 0;
     color: #666;
+    text-align: center;
+    flex: 1;
+}
+
+.info-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.info-row p1 {
+    margin: 0;
+    color: #666;
+    text-align: left;
+    flex: 1;
+}
+
+.container-head {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0px;
+}
+
+.container-head p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+    text-align: left;
+    cursor: pointer;
+    margin-left: 15px;
 }

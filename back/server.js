@@ -22,7 +22,7 @@ app.post('/', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await pool.query('SELECT * FROM public."Student" WHERE "Email" = $1 AND "Password" = $2;', [email, password]);
-    
+
     if (user.rows.length === 0) {
       return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
     }
