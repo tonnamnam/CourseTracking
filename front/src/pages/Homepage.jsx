@@ -11,13 +11,13 @@ const HomePage = () => {
     const [completedCredits, setCompletedCredits] = useState(null);
     const [remainingCredits, setRemainingCredits] = useState(null);
     const [cumulativeGPA, setCumulativeGPA] = useState(null);  // เพิ่ม state สำหรับ GPA รวม
-    
+
     useEffect(() => {
         const fetchGPSData = async () => {
             const studentid = localStorage.getItem('studentid');
             if (studentid) {
                 try {
-                    const response = await fetch(`http://localhost:5000/api/grade?studentid=${studentid}`);
+                    const response = await fetch(`http://localhost:5001/api/grade?studentid=${studentid}`);
                     const data = await response.json();
                     console.log('Fetched GPS Data:', data);
                     if (response.ok) {
@@ -43,7 +43,7 @@ const HomePage = () => {
             const studentid = localStorage.getItem('studentid');
             if (studentid) {
                 try {
-                    const response = await fetch(`http://localhost:5000/api/major-requirements?studentid=${studentid}`);
+                    const response = await fetch(`http://localhost:5001/api/major-requirements?studentid=${studentid}`);
                     const data = await response.json();
                     if (response.ok) {
                         setRequiredCredits(data.requiredCredits);

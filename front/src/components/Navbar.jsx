@@ -11,11 +11,12 @@ const Navbar = () => {
             const studentid = localStorage.getItem('studentid');
             if (studentid) {
                 try {
-                    const response = await fetch(`http://localhost:5000/api/student-details?studentid=${studentid}`);
+                    const response = await fetch(`http://localhost:5001/api/student-details?studentid=${studentid}`);
                     const data = await response.json();
                     if (response.ok) {
                         setUsername(`${data.name} ${data.surname}`); // ตั้งค่า username ด้วย Name และ Surname
-                    } else {
+                    }
+                    else {
                         console.log('Fail to fetch user data');
                     }
                 } catch (error) {
