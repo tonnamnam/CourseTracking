@@ -5,11 +5,39 @@ import "../styles/Homepage.css";
 import { Select, MenuItem } from "@mui/material";
 
 const HomePage = () => {
-    const [selectedGPS, setSelectedGPS] = useState("1/2566");
+    const [selectedSemester, setSelectedSemester] = useState(null);
+    const [semesters, setSemesters] = useState([]);
     const [requiredCredits, setRequiredCredits] = useState(null);
-    const [completedCredits,setCompletedCredits] = useState(null);
-    const [remainingCredits, setRemainingCredits] = useState(null); // เพิ่ม remainingCredits
+    const [completedCredits, setCompletedCredits] = useState(null);
+    const [remainingCredits, setRemainingCredits] = useState(null);
+    const [cumulativeGPA, setCumulativeGPA] = useState(null);  // เพิ่ม state สำหรับ GPA รวม
+    
+    useEffect(() => {
+        const fetchGPSData = async () => {
+            const studentid = localStorage.getItem('studentid');
+            if (studentid) {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/grade?studentid=${studentid}`);
+                    const data = await response.json();
+                    console.log('Fetched GPS Data:', data);
+                    if (response.ok) {
+                        setSemesters(data.semesters);
+                        setSelectedSemester(data.selectedGPS);
+                        setCumulativeGPA(data.cumulativeGPA);  // ตั้งค่า GPA รวม
+                    }
+                    else {
+                        console.error('Failed to fetch GPS data:', data.error);
+                    }
+                } catch (error) {
+                    console.error('Error fetching GPS data:', error);
+                }
+            }
+        };
 
+        fetchGPSData();
+    }, []);
+
+    // ดึงข้อมูลหน่วยกิต
     useEffect(() => {
         const fetchCreditsData = async () => {
             const studentid = localStorage.getItem('studentid');
@@ -33,9 +61,14 @@ const HomePage = () => {
         fetchCreditsData();
     }, []);
 
-    const handleGPSChange = (event) => {
-        setSelectedGPS(event.target.value);
+    const handleSemesterChange = (event) => {
+        const selectedSemesterName = event.target.value;
+        const selected = semesters.find(sem => sem.semestername === selectedSemesterName);
+        if (selected) {
+            setSelectedSemester(selected);
+        }
     };
+
 
     return (
         <div className="homepage-container">
@@ -53,22 +86,34 @@ const HomePage = () => {
                     </div>
                     <div className="stat-box">
                         <p>หน่วยกิตที่ขาด</p>
-                        <h2>{remainingCredits !== null ? remainingCredits : 'กำลังโหลด...'}</h2> {/* แสดง remainingCredits */}
+                        <h2>{remainingCredits !== null ? remainingCredits : 'กำลังโหลด...'}</h2>
                     </div>
                     <div className="stat-box">
-                        <p>GPA</p>
-                        <h2>4.00</h2>
+                        <p>GPA รวม</p> {/* แสดง cumulative GPA */}
+                        <h2>{cumulativeGPA !== null ? cumulativeGPA : 'กำลังโหลด...'}</h2>
                     </div>
                     <div className="stat-box">
                         <Select
-                            value={selectedGPS}
-                            onChange={handleGPSChange}
+                            value={selectedSemester?.semestername || ''}
+                            onChange={handleSemesterChange}
                             variant="standard"
+                            displayEmpty
+                            sx={{ minWidth: 120 }}
                         >
-                            <MenuItem value="1/2566"><p>GPS 1/2566</p></MenuItem>
-                            <MenuItem value="2/2567"><p>GPS 2/2567</p></MenuItem>
+                            {semesters.map((semester) => (
+                                <MenuItem
+                                    key={semester.semestername}
+                                    value={semester.semestername}
+                                >
+                                    <p>GPS {semester.semestername}</p>
+                                </MenuItem>
+                            ))}
                         </Select>
-                        <h2>{selectedGPS === "1/2566" ? "5.99" : "6.00"}</h2>
+                        <h2>
+                            {selectedSemester && !isNaN(selectedSemester.gps) // เปลี่ยนการเช็คเป็น !isNaN
+                                ? parseFloat(selectedSemester.gps).toFixed(2) // แปลงสตริงเป็นตัวเลข
+                                : 'กำลังโหลด...'}
+                        </h2>
                     </div>
                 </div>
                 <div className="container">
@@ -77,17 +122,17 @@ const HomePage = () => {
                             <h3>GENED</h3><p>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
-                            <p1>ที่ต้องเรียน</p1>
+                            <p>ที่ต้องเรียน</p>
                             <p>89</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
-                            <p1>ที่เรียนไปแล้ว</p1>
+                            <p>ที่เรียนไปแล้ว</p>
                             <p>8</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
-                            <p1>ขาดอีก</p1>
+                            <p>ขาดอีก</p>
                             <p>81</p>
                             <p>หน่วยกิต</p>
                         </div>
@@ -97,17 +142,17 @@ const HomePage = () => {
                             <h3>วิชาภาค</h3><p>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
-                            <p1>ที่ต้องเรียน</p1>
+                            <p>ที่ต้องเรียน</p>
                             <p>89</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
-                            <p1>ที่เรียนไปแล้ว</p1>
+                            <p>ที่เรียนไปแล้ว</p>
                             <p>889</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
-                            <p1>ขาดอีก</p1>
+                            <p>ขาดอีก</p>
                             <p>81</p>
                             <p>หน่วยกิต</p>
                         </div>

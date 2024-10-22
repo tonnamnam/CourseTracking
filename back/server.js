@@ -27,8 +27,8 @@ app.post('/', async (req, res) => {
       return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
     }
 
-    res.status(200).json({ 
-      message: 'ล็อกอินสำเร็จ', 
+    res.status(200).json({
+      message: 'ล็อกอินสำเร็จ',
       email: user.rows[0].email,
       studentid: user.rows[0].studentid
     });
@@ -44,21 +44,22 @@ app.get('/api/major-requirements', async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
-    dp.totalcredits AS requiredcredits, 
-    (mj.completedcredits + ged.completedcredits) AS completedcredits,
-    (dp.totalcredits - (mj.completedcredits + ged.completedcredits)) AS remainingcredits
-    FROM majorrequirement mj JOIN gened ged 
-    ON ged.studentid = mj.studentid JOIN department dp 
-    ON dp.departmentid = mj.departmentid
-    WHERE mj.studentid = $1 AND ged.studentid = $1;`, [studentid]);
+        dp.totalcredits AS requiredcredits, 
+        (mj.completedcredits + ged.completedcredits) AS completedcredits,
+        (dp.totalcredits - (mj.completedcredits + ged.completedcredits)) AS remainingcredits
+      FROM majorrequirement mj 
+      JOIN gened ged ON ged.studentid = mj.studentid 
+      JOIN department dp ON dp.departmentid = mj.departmentid
+      WHERE mj.studentid = $1 AND ged.studentid = $1;`, [studentid]);
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'ไม่พบข้อมูล' });
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       requiredCredits: result.rows[0].requiredcredits,
       completedCredits: result.rows[0].completedcredits,
-      remainingCredits: result.rows[0].remainingcredits // ส่งข้อมูล remainingCredits กลับไปด้วย
+      remainingCredits: result.rows[0].remainingcredits
     });
   } catch (error) {
     console.error(error);
@@ -66,7 +67,7 @@ app.get('/api/major-requirements', async (req, res) => {
   }
 });
 
-
+// Endpoint สำหรับดึงข้อมูลนักเรียน
 app.get('/api/student-details', async (req, res) => {
   const { studentid } = req.query;
   try {
@@ -90,6 +91,53 @@ app.get('/api/student-details', async (req, res) => {
   }
 });
 
+// Endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
+// แก้ไข endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
+app.get('/api/grade', async (req, res) => {
+  const { studentid } = req.query;
+  try {
+    // ดึง GPS ของแต่ละเทอม (เปลี่ยนจาก gr.point เป็น gr.gradepoint)
+    const result = await pool.query(`
+      SELECT 
+        en.studentid,
+        sm.semestername,
+        ROUND(SUM(gr.gradepoint * cr.credits) / SUM(cr.credits), 2) as gps,
+        sm.semesterid
+      FROM enrollment en
+      INNER JOIN course cr ON en.courseid = cr.courseid
+      INNER JOIN semester sm ON sm.semesterid = en.semesterid
+      INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
+      WHERE en.studentid = $1 AND en.grade IS NOT NULL
+      GROUP BY en.studentid, sm.semestername, sm.semesterid
+      ORDER BY sm.semesterid;
+    `, [studentid]);
+
+    if (result.rows.length === 0) {
+      return res.status(200).json({ semesters: [], selectedGPS: null, cumulativeGPA: null });
+    }
+
+    // ดึง cumulative GPA (เปลี่ยนจาก gr.point เป็น gr.gradepoint)
+    const cumulativeResult = await pool.query(`
+      SELECT 
+        ROUND(CAST(SUM(gr.gradepoint * cr.credits) / SUM(cr.credits) AS NUMERIC), 2) as cumulative_gpa
+      FROM enrollment en
+      INNER JOIN course cr ON en.courseid = cr.courseid
+      INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
+      WHERE en.studentid = $1 AND en.grade IS NOT NULL
+    `, [studentid]);
+
+    const cumulativeGPA = cumulativeResult.rows[0]?.cumulative_gpa || null;
+
+    res.status(200).json({
+      semesters: result.rows,
+      selectedGPS: result.rows[result.rows.length - 1],  // เลือกเทอมล่าสุด
+      cumulativeGPA: cumulativeGPA
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูล GPS' });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
