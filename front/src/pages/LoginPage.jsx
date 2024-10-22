@@ -79,7 +79,7 @@ const LoginPage = () => {
         <Container maxWidth="xs">
           <Box className="login-box">
             <Logo src={logo} alt="KMITL Logo" />
-            <Typography variant="h5" component="h1" gutterBottom>
+            <Typography variant="h5" component="h1" color="black" gutterBottom>
               SIGN IN
             </Typography>
             {error && (

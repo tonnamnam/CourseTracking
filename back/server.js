@@ -96,8 +96,8 @@ app.get('/api/student-details', async (req, res) => {
 app.get('/api/grade', async (req, res) => {
   const { studentid } = req.query;
   try {
-    // ดึง GPS ของแต่ละเทอม (เปลี่ยนจาก gr.point เป็น gr.gradepoint)
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT 
         en.studentid,
         sm.semestername,
@@ -107,24 +107,34 @@ app.get('/api/grade', async (req, res) => {
       INNER JOIN course cr ON en.courseid = cr.courseid
       INNER JOIN semester sm ON sm.semesterid = en.semesterid
       INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
-      WHERE en.studentid = $1 AND en.grade IS NOT NULL
+      WHERE en.studentid = $1 
+        AND en.grade IS NOT NULL 
+        AND en.grade NOT IN ('S', 'U') -- Exclude 'S' and 'U' grades
       GROUP BY en.studentid, sm.semestername, sm.semesterid
       ORDER BY sm.semesterid;
-    `, [studentid]);
+      `,
+      [studentid]
+    );
 
     if (result.rows.length === 0) {
       return res.status(200).json({ semesters: [], selectedGPS: null, cumulativeGPA: null });
     }
 
-    // ดึง cumulative GPA (เปลี่ยนจาก gr.point เป็น gr.gradepoint)
-    const cumulativeResult = await pool.query(`
+    const cumulativeResult = await pool.query(
+      `
       SELECT 
-        ROUND(CAST(SUM(gr.gradepoint * cr.credits) / SUM(cr.credits) AS NUMERIC), 2) as cumulative_gpa
+        en.studentid,
+        ROUND(SUM(gr.gradepoint * cr.credits) / SUM(cr.credits), 2) as gpa
       FROM enrollment en
       INNER JOIN course cr ON en.courseid = cr.courseid
       INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
-      WHERE en.studentid = $1 AND en.grade IS NOT NULL
-    `, [studentid]);
+      WHERE en.studentid = $1 
+        AND en.grade IS NOT NULL 
+        AND en.grade NOT IN ('S', 'U') -- Exclude 'S' and 'U' grades
+      GROUP BY en.studentid;
+      `,
+      [studentid]
+    );
 
     const cumulativeGPA = cumulativeResult.rows[0]?.cumulative_gpa || null;
 

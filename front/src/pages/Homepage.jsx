@@ -89,7 +89,7 @@ const HomePage = () => {
                         <h2>{remainingCredits !== null ? remainingCredits : 'กำลังโหลด...'}</h2>
                     </div>
                     <div className="stat-box">
-                        <p>GPA รวม</p> {/* แสดง cumulative GPA */}
+                        <p>GPA</p>
                         <h2>{cumulativeGPA !== null ? cumulativeGPA : 'กำลังโหลด...'}</h2>
                     </div>
                     <div className="stat-box">
