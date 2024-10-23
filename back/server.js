@@ -93,51 +93,41 @@ app.get('/api/student-details', async (req, res) => {
 
 // Endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
 // แก้ไข endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
+// Endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
 app.get('/api/grade', async (req, res) => {
   const { studentid } = req.query;
   try {
-    const result = await pool.query(
-      `
+    // ดึง GPS ของแต่ละเทอม (กรองเกรด S และ U ออก)
+    const result = await pool.query(`
       SELECT 
         en.studentid,
         sm.semestername,
-        ROUND(SUM(gr.gradepoint * cr.credits) / SUM(cr.credits), 2) as gps,
+        ROUND(SUM(gr.gradepoint * cr.credits) / NULLIF(SUM(cr.credits), 0), 2) as gps,
         sm.semesterid
       FROM enrollment en
       INNER JOIN course cr ON en.courseid = cr.courseid
       INNER JOIN semester sm ON sm.semesterid = en.semesterid
       INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
-      WHERE en.studentid = $1 
-        AND en.grade IS NOT NULL 
-        AND en.grade NOT IN ('S', 'U') -- Exclude 'S' and 'U' grades
+      WHERE en.studentid = $1 AND en.grade IS NOT NULL AND en.grade NOT IN ('S', 'U')
       GROUP BY en.studentid, sm.semestername, sm.semesterid
       ORDER BY sm.semesterid;
-      `,
-      [studentid]
-    );
+    `, [studentid]);
 
     if (result.rows.length === 0) {
       return res.status(200).json({ semesters: [], selectedGPS: null, cumulativeGPA: null });
     }
 
-    const cumulativeResult = await pool.query(
-      `
+    // ดึง cumulative GPA (กรองเกรด S และ U ออก)
+    const cumulativeResult = await pool.query(`
       SELECT 
-        en.studentid,
-        ROUND(SUM(gr.gradepoint * cr.credits) / SUM(cr.credits), 2) as gpa
+        ROUND(CAST(SUM(gr.gradepoint * cr.credits) / NULLIF(SUM(cr.credits), 0) AS NUMERIC), 2) as cumulative_gpa
       FROM enrollment en
       INNER JOIN course cr ON en.courseid = cr.courseid
       INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
-      WHERE en.studentid = $1 
-        AND en.grade IS NOT NULL 
-        AND en.grade NOT IN ('S', 'U') -- Exclude 'S' and 'U' grades
-      GROUP BY en.studentid;
-      `,
-      [studentid]
-    );
+      WHERE en.studentid = $1 AND en.grade IS NOT NULL AND en.grade NOT IN ('S', 'U')
+    `, [studentid]);
 
     const cumulativeGPA = cumulativeResult.rows[0]?.cumulative_gpa || null;
-
     res.status(200).json({
       semesters: result.rows,
       selectedGPS: result.rows[result.rows.length - 1],  // เลือกเทอมล่าสุด
