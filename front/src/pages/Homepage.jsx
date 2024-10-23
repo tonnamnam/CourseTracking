@@ -123,17 +123,17 @@ const HomePage = () => {
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
-                            <p>89</p>
+                            <p>30</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ที่เรียนไปแล้ว</p>
-                            <p>8</p>
+                            <p>6</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ขาดอีก</p>
-                            <p>81</p>
+                            <p>24</p>
                             <p>หน่วยกิต</p>
                         </div>
                     </div>
@@ -143,17 +143,17 @@ const HomePage = () => {
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
-                            <p>89</p>
+                            <p>105</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ที่เรียนไปแล้ว</p>
-                            <p>889</p>
+                            <p>67</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ขาดอีก</p>
-                            <p>81</p>
+                            <p>38</p>
                             <p>หน่วยกิต</p>
                         </div>
                     </div>

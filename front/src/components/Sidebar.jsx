@@ -21,13 +21,18 @@ const Sidebar = () => {
             <div className="sidebar-menu" style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
                 <List sx={{ width: "100" }}>
                     <ListItem disablePadding>
-                        <ListItemButton onClick={() => navigate('/home')}>
+                        <ListItemButton sx={{ marginBottom: 1 }} onClick={() => navigate('/home')}>
                             <Typography>HOME</Typography>
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton onClick={() => navigate('/schedule')}>
+                        <ListItemButton sx={{ marginBottom: 1 }} onClick={() => navigate('/schedule')}>
                             <Typography>ตารางเรียน</Typography>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton sx={{ marginBottom: 1 }} onClick={() => navigate('/calgrade')}>
+                            <Typography>คำนวณเกรด</Typography>
                         </ListItemButton>
                     </ListItem>
                 </List>

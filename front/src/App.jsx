@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPage from './pages/LoginPage.jsx';
 import HomePage from './pages/Homepage.jsx';
 import Schedule from './pages/schedule.jsx';
+import CalGrade from './pages/CalGrade.jsx';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/calgrade" element={<CalGrade />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
