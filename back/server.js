@@ -43,14 +43,23 @@ app.get('/api/major-requirements', async (req, res) => {
   const { studentid } = req.query;
   try {
     const result = await pool.query(`
-      SELECT 
-        dp.totalcredits AS requiredcredits, 
-        (mj.completedcredits + ged.completedcredits) AS completedcredits,
-        (dp.totalcredits - (mj.completedcredits + ged.completedcredits)) AS remainingcredits
-      FROM majorrequirement mj 
-      JOIN gened ged ON ged.studentid = mj.studentid 
-      JOIN department dp ON dp.departmentid = mj.departmentid
-      WHERE mj.studentid = $1 AND ged.studentid = $1;`, [studentid]);
+      WITH requiredcredits AS (
+    SELECT dp.totalcredits AS requiredcredits
+    FROM majorrequirement mj
+    JOIN department dp ON dp.departmentid = mj.departmentid
+    WHERE mj.studentid = $1
+),
+completedcredits AS (
+    SELECT SUM(cr.credits) AS completedcredits
+    FROM student st
+    INNER JOIN enrollment en ON en.studentid = st.studentid
+    INNER JOIN course cr ON cr.courseid = en.courseid
+    WHERE st.studentid = $1
+)
+SELECT rc.requiredcredits, cc.completedcredits, 
+       (rc.requiredcredits - cc.completedcredits) AS remainingcredits
+FROM requiredcredits rc, completedcredits cc;
+`, [studentid]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'ไม่พบข้อมูล' });
@@ -117,21 +126,25 @@ app.get('/api/grade', async (req, res) => {
       return res.status(200).json({ semesters: [], selectedGPS: null, cumulativeGPA: null });
     }
 
-    // ดึง cumulative GPA (กรองเกรด S และ U ออก)
     const cumulativeResult = await pool.query(`
       SELECT 
-        ROUND(CAST(SUM(gr.gradepoint * cr.credits) / NULLIF(SUM(cr.credits), 0) AS NUMERIC), 2) as cumulative_gpa
+        ROUND(CAST(SUM(gr.gradepoint * cr.credits) / NULLIF(SUM(cr.credits), 0) AS NUMERIC), 2) as cumulative_gpa,
+        SUM(cr.credits) AS total_credits_used
       FROM enrollment en
       INNER JOIN course cr ON en.courseid = cr.courseid
       INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
       WHERE en.studentid = $1 AND en.grade IS NOT NULL AND en.grade NOT IN ('S', 'U')
     `, [studentid]);
 
+    // เก็บ cumulative GPA และ total credits ไว้ในตัวแปรเพื่อใช้งานต่อ
     const cumulativeGPA = cumulativeResult.rows[0]?.cumulative_gpa || null;
+    const totalCreditsUsed = cumulativeResult.rows[0]?.total_credits_used || 0;
+
     res.status(200).json({
       semesters: result.rows,
       selectedGPS: result.rows[result.rows.length - 1],  // เลือกเทอมล่าสุด
-      cumulativeGPA: cumulativeGPA
+      cumulativeGPA: cumulativeGPA,
+      totalCreditsUsed: totalCreditsUsed // เพิ่ม total credits used เข้าไปใน response
     });
   } catch (error) {
     console.error(error);

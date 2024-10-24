@@ -1,0 +1,61 @@
+.container {
+    display: flex;
+}
+
+.content {
+    margin-left: 20vw; /* ให้เนื้อหาหลักเริ่มหลัง Sidebar */
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.grade-info h2 {
+    font-size: 24px;
+    text-align: center;
+}
+
+.form-group {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.form-group label {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.input-field {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.calculate-button {
+    background-color: #ff6f3e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+}
+
+.calculate-button:hover {
+    background-color: #e65c2c;
+}
+
+.result {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 10px;
+}
