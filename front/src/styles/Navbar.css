@@ -1,3 +1,4 @@
+/* Navbar.css */
 .navbar-container {
     width: 100vw;
     height: 10vh;
@@ -15,15 +16,94 @@
 
 .navbar {
     display: flex;
-    /* ใช้ flexbox สำหรับการจัดเรียง */
     align-items: center;
-    /* จัดให้ตรงกลางในแนวแกน Y */
     gap: 10px;
     font-weight: bold;
-    /* ระยะห่างระหว่างไอคอนและชื่อผู้ใช้ */
 }
 
 p {
     margin: 0;
-    /* ลบ margin ของ h4 */
+}
+
+/* ส่วนที่เพิ่มเติมสำหรับ notifications */
+.notification-container {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.75rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-popup {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+    width: 320px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.notification-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.125rem;
+}
+
+.view-all {
+    color: #2563eb;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.notification-list {
+    max-height: 384px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: #f9fafb;
+}
+
+.notification-item p {
+    font-size: 0.875rem;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: #6b7280;
+    display: block;
 }

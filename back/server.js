@@ -18,7 +18,7 @@ const pool = new Pool({
 });
 
 // Endpoint สำหรับล็อกอิน
-app.post('/', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await pool.query('SELECT StudentID, Email FROM public.student WHERE Email = $1 AND Password = $2;', [email, password]);
@@ -136,6 +136,34 @@ app.get('/api/grade', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูล GPS' });
+  }
+});
+
+app.get('/api/notifications', async (req, res) => {
+  try {
+    const query = `
+      SELECT notificationid, detail, startdate, enddate
+      FROM public.notification
+      WHERE 
+        (
+          enddate IS NULL AND 
+          CURRENT_DATE >= (startdate - INTERVAL '14 days') AND
+          CURRENT_DATE < (startdate + INTERVAL '1 day')
+        )
+        OR
+        (
+          enddate IS NOT NULL AND 
+          CURRENT_DATE >= (startdate - INTERVAL '14 days') AND
+          CURRENT_DATE < (enddate + INTERVAL '1 day')
+        )
+      ORDER BY startdate;
+    `;
+    
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

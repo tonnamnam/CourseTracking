@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import Navbar from "../components/Navbar.jsx";
 import "../styles/Homepage.css";
-import { Select, MenuItem } from "@mui/material";
+import { Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 const HomePage = () => {
     const [selectedSemester, setSelectedSemester] = useState(null);
@@ -10,7 +10,11 @@ const HomePage = () => {
     const [requiredCredits, setRequiredCredits] = useState(null);
     const [completedCredits, setCompletedCredits] = useState(null);
     const [remainingCredits, setRemainingCredits] = useState(null);
-    const [cumulativeGPA, setCumulativeGPA] = useState(null);  // เพิ่ม state สำหรับ GPA รวม
+    const [cumulativeGPA, setCumulativeGPA] = useState(null);
+    
+    // State for controlling dialogs
+    const [openGenedDialog, setOpenGenedDialog] = useState(false);
+    const [openMajorDialog, setOpenMajorDialog] = useState(false);
 
     useEffect(() => {
         const fetchGPSData = async () => {
@@ -19,13 +23,11 @@ const HomePage = () => {
                 try {
                     const response = await fetch(`http://localhost:5001/api/grade?studentid=${studentid}`);
                     const data = await response.json();
-                    console.log('Fetched GPS Data:', data);
                     if (response.ok) {
                         setSemesters(data.semesters);
                         setSelectedSemester(data.selectedGPS);
-                        setCumulativeGPA(data.cumulativeGPA);  // ตั้งค่า GPA รวม
-                    }
-                    else {
+                        setCumulativeGPA(data.cumulativeGPA);
+                    } else {
                         console.error('Failed to fetch GPS data:', data.error);
                     }
                 } catch (error) {
@@ -37,7 +39,6 @@ const HomePage = () => {
         fetchGPSData();
     }, []);
 
-    // ดึงข้อมูลหน่วยกิต
     useEffect(() => {
         const fetchCreditsData = async () => {
             const studentid = localStorage.getItem('studentid');
@@ -69,6 +70,12 @@ const HomePage = () => {
         }
     };
 
+    // Handlers for opening and closing dialogs
+    const handleOpenGenedDialog = () => setOpenGenedDialog(true);
+    const handleCloseGenedDialog = () => setOpenGenedDialog(false);
+
+    const handleOpenMajorDialog = () => setOpenMajorDialog(true);
+    const handleCloseMajorDialog = () => setOpenMajorDialog(false);
 
     return (
         <div className="homepage-container">
@@ -110,16 +117,18 @@ const HomePage = () => {
                             ))}
                         </Select>
                         <h2>
-                            {selectedSemester && !isNaN(selectedSemester.gps) // เปลี่ยนการเช็คเป็น !isNaN
-                                ? parseFloat(selectedSemester.gps).toFixed(2) // แปลงสตริงเป็นตัวเลข
+                            {selectedSemester && !isNaN(selectedSemester.gps)
+                                ? parseFloat(selectedSemester.gps).toFixed(2)
                                 : 'กำลังโหลด...'}
                         </h2>
                     </div>
                 </div>
+
                 <div className="container">
                     <div className="info-box">
                         <div className="container-head">
-                            <h3>GENED</h3><p>ดูวิชาเรียน</p>
+                            <h3>GENED</h3>
+                            <p onClick={handleOpenGenedDialog}>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -137,9 +146,11 @@ const HomePage = () => {
                             <p>หน่วยกิต</p>
                         </div>
                     </div>
+
                     <div className="info-box">
                         <div className="container-head">
-                            <h3>วิชาภาค</h3><p>ดูวิชาเรียน</p>
+                            <h3>วิชาภาค</h3>
+                            <p onClick={handleOpenMajorDialog}>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -158,6 +169,30 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Dialog for Gened subjects */}
+                <Dialog open={openGenedDialog} onClose={handleCloseGenedDialog}>
+                    <DialogTitle>วิชาเรียน GENED</DialogTitle>
+                    <DialogContent>
+                        {/* Display fetched or input data here */}
+                        <p>ข้อมูลเกี่ยวกับวิชาเรียน GENED</p>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseGenedDialog}>ปิด</Button>
+                    </DialogActions>
+                </Dialog>
+
+                {/* Dialog for Major subjects */}
+                <Dialog open={openMajorDialog} onClose={handleCloseMajorDialog}>
+                    <DialogTitle>วิชาเรียน ภาค</DialogTitle>
+                    <DialogContent>
+                        {/* Display fetched or input data here */}
+                        <p>ข้อมูลเกี่ยวกับวิชาเรียน ภาค</p>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseMajorDialog}>ปิด</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </div>
     );
