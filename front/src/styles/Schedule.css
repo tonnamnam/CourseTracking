@@ -1,0 +1,83 @@
+/* Schedule.css */
+
+/* Container settings */
+.schedule-container {
+    margin-left: 20vw; /* เลื่อนเนื้อหาให้พ้นจาก Sidebar */
+    padding: 20px;
+    margin-top: 10vh;
+    box-sizing: border-box;
+    width: calc(100% - 20vw); /* ปรับขนาดให้พอดีกับพื้นที่หลังจาก Sidebar */
+    max-width: 100%;
+}
+
+/* ส่วนของ table */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+/* ส่วนของหัวตาราง */
+.schedule-header {
+    background-color: #f3f4f6;
+    text-align: center;
+    padding: 6px; /* ลด padding ของหัวตาราง */
+    font-weight: bold;
+    border: 1px solid #ddd;
+    font-size: 0.85rem; /* ลดขนาดฟอนต์ของหัวตาราง */
+}
+
+/* ส่วนของเซลล์ในตาราง */
+.schedule-cell {
+    min-width: 80px; /* ลดขนาดขั้นต่ำของเซลล์ */
+    height: 60px; /* ลดขนาดความสูงของเซลล์ */
+    padding: 4px; /* ลด padding ของเซลล์ */
+    text-align: center;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+/* ส่วนของ course card */
+.course-card {
+    padding: 4px; /* ลด padding ของ course card */
+    border-radius: 6px;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.course-card .course-name {
+    font-weight: bold;
+    font-size: 0.8rem; /* ลดขนาดฟอนต์ของชื่อวิชา */
+}
+
+.course-card .course-type {
+    font-size: 0.65rem; /* ลดขนาดฟอนต์ของประเภทวิชา */
+    opacity: 0.9;
+}
+
+/* Semester select styling */
+.semester-select-container {
+    margin-bottom: 20px;
+}
+
+.semester-select {
+    padding: 8px; /* ลด padding ของ dropdown */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 220px; /* ลดขนาดความกว้างของ dropdown */
+}
+
+/* สำหรับ responsive */
+@media (max-width: 1024px) {
+    .schedule-table {
+        overflow-x: auto;
+    }
+    
+    .schedule-cell {
+        min-width: 70px; /* ลดขนาดเซลล์สำหรับหน้าจอขนาดเล็ก */
+    }
+}

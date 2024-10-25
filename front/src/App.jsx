@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPage from './pages/LoginPage.jsx';
 import HomePage from './pages/Homepage.jsx';
-import Schedule from './pages/schedule.jsx';
+import Schedule from './pages/Schedule.jsx';
 import CalGrade from './pages/CalGrade.jsx';
 
 function App() {
