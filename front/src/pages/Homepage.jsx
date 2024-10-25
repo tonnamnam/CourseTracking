@@ -11,10 +11,6 @@ const HomePage = () => {
     const [completedCredits, setCompletedCredits] = useState(null);
     const [remainingCredits, setRemainingCredits] = useState(null);
     const [cumulativeGPA, setCumulativeGPA] = useState(null);
-    
-    // State for controlling dialogs
-    const [openGenedDialog, setOpenGenedDialog] = useState(false);
-    const [openMajorDialog, setOpenMajorDialog] = useState(false);
 
     useEffect(() => {
         const fetchGPSData = async () => {
@@ -70,13 +66,6 @@ const HomePage = () => {
         }
     };
 
-    // Handlers for opening and closing dialogs
-    const handleOpenGenedDialog = () => setOpenGenedDialog(true);
-    const handleCloseGenedDialog = () => setOpenGenedDialog(false);
-
-    const handleOpenMajorDialog = () => setOpenMajorDialog(true);
-    const handleCloseMajorDialog = () => setOpenMajorDialog(false);
-
     return (
         <div className="homepage-container">
             <Sidebar />
@@ -128,7 +117,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>GENED</h3>
-                            <p onClick={handleOpenGenedDialog}>ดูวิชาเรียน</p>
+                            <p>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -150,7 +139,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>วิชาภาค</h3>
-                            <p onClick={handleOpenMajorDialog}>ดูวิชาเรียน</p>
+                            <p>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -169,30 +158,6 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Dialog for Gened subjects */}
-                <Dialog open={openGenedDialog} onClose={handleCloseGenedDialog}>
-                    <DialogTitle>วิชาเรียน GENED</DialogTitle>
-                    <DialogContent>
-                        {/* Display fetched or input data here */}
-                        <p>ข้อมูลเกี่ยวกับวิชาเรียน GENED</p>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseGenedDialog}>ปิด</Button>
-                    </DialogActions>
-                </Dialog>
-
-                {/* Dialog for Major subjects */}
-                <Dialog open={openMajorDialog} onClose={handleCloseMajorDialog}>
-                    <DialogTitle>วิชาเรียน ภาค</DialogTitle>
-                    <DialogContent>
-                        {/* Display fetched or input data here */}
-                        <p>ข้อมูลเกี่ยวกับวิชาเรียน ภาค</p>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseMajorDialog}>ปิด</Button>
-                    </DialogActions>
-                </Dialog>
             </div>
         </div>
     );

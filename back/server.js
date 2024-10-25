@@ -54,7 +54,7 @@ completedcredits AS (
     FROM student st
     INNER JOIN enrollment en ON en.studentid = st.studentid
     INNER JOIN course cr ON cr.courseid = en.courseid
-    WHERE st.studentid = $1
+    WHERE st.studentid = $1 and en.grade is not null
 )
 SELECT rc.requiredcredits, cc.completedcredits, 
        (rc.requiredcredits - cc.completedcredits) AS remainingcredits
