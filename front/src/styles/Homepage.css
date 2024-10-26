@@ -26,6 +26,7 @@ body {
     justify-content: left;
     gap: 50px;
     margin-bottom: 20px;
+    margin-left: 2vw;
 }
 
 .stat-box {

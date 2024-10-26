@@ -50,11 +50,11 @@ app.get('/api/major-requirements', async (req, res) => {
     WHERE mj.studentid = $1
 ),
 completedcredits AS (
-    SELECT SUM(cr.credits) AS completedcredits
+    SELECT (COALESCE(mj.completedcredits, 0) + COALESCE(g.completedcredits, 0)) AS completedcredits
     FROM student st
-    INNER JOIN enrollment en ON en.studentid = st.studentid
-    INNER JOIN course cr ON cr.courseid = en.courseid
-    WHERE st.studentid = $1 and en.grade is not null
+    INNER JOIN majorrequirement mj ON mj.studentid = st.studentid
+    INNER JOIN gened g ON g.studentid = st.studentid
+    WHERE st.studentid = $1
 )
 SELECT rc.requiredcredits, cc.completedcredits, 
        (rc.requiredcredits - cc.completedcredits) AS remainingcredits
@@ -171,7 +171,7 @@ app.get('/api/notifications', async (req, res) => {
         )
       ORDER BY startdate;
     `;
-    
+
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
