@@ -76,6 +76,44 @@ FROM requiredcredits rc, completedcredits cc;
   }
 });
 
+// Endpoint สำหรับดึงข้อมูลหน่วยกิต GenEd, major
+app.get('/api/gened-major', async (req, res) => {
+  const { studentid } = req.query;
+  try {
+    const result = await pool.query(`
+      SELECT 
+        g.requiredcredits AS genedtotalcredit,
+        g.completedcredits AS genedcompletedcredit,
+        g.remainingcredits AS genedremainingcredit,
+        mj.requiredcredits AS majortotalcredit,
+        mj.completedcredits AS majorcompletedcredit,
+        mj.remainingcredits AS majorremainingcredit
+      FROM gened g
+      INNER JOIN majorrequirement mj ON g.studentid = mj.studentid
+      WHERE g.studentid = $1
+    `, [studentid]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'ไม่พบข้อมูล' });
+    }
+
+    res.status(200).json({
+      gened: {
+        totalCredits: result.rows[0].genedtotalcredit,
+        completedCredits: result.rows[0].genedcompletedcredit,
+        remainingCredits: result.rows[0].genedremainingcredit
+      },
+      major: {
+        totalCredits: result.rows[0].majortotalcredit,
+        completedCredits: result.rows[0].majorcompletedcredit,
+        remainingCredits: result.rows[0].majorremainingcredit
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูล' });
+  }
+});
+
 // Endpoint สำหรับดึงข้อมูลนักเรียน
 app.get('/api/student-details', async (req, res) => {
   const { studentid } = req.query;
@@ -101,25 +139,36 @@ app.get('/api/student-details', async (req, res) => {
 });
 
 // Endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
-// แก้ไข endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
-// Endpoint สำหรับดึงข้อมูล GPS และ GPA รวม
 app.get('/api/grade', async (req, res) => {
   const { studentid } = req.query;
   try {
-    // ดึง GPS ของแต่ละเทอม (กรองเกรด S และ U ออก)
     const result = await pool.query(`
       SELECT 
-        en.studentid,
-        sm.semestername,
-        ROUND(SUM(gr.gradepoint * cr.credits) / NULLIF(SUM(cr.credits), 0), 2) as gps,
-        sm.semesterid
-      FROM enrollment en
-      INNER JOIN course cr ON en.courseid = cr.courseid
-      INNER JOIN semester sm ON sm.semesterid = en.semesterid
-      INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
-      WHERE en.studentid = $1 AND en.grade IS NOT NULL AND en.grade NOT IN ('S', 'U')
-      GROUP BY en.studentid, sm.semestername, sm.semesterid
-      ORDER BY sm.semesterid;
+          studentid,
+          year,
+          semesterid,
+          ROUND(SUM(gradepoint * credits) / NULLIF(SUM(credits), 0), 2) AS gps,
+          SUM(credits) AS total_credits
+      FROM (
+          SELECT DISTINCT
+              en.studentid,
+              sm.year,
+              sm.semesterid,
+              en.courseid,
+              cr.coursename,
+              en.grade,
+              gr.gradepoint,
+              cr.credits
+          FROM enrollment en
+          INNER JOIN course cr ON en.courseid = cr.courseid
+          INNER JOIN semester sm ON sm.semesterid = en.semesterid
+          INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
+          WHERE en.studentid = $1
+              AND en.grade IS NOT NULL
+              AND en.grade NOT IN ('S', 'U')
+      ) AS FilteredCourses
+      GROUP BY studentid, year, semesterid
+      ORDER BY year, semesterid;
     `, [studentid]);
 
     if (result.rows.length === 0) {
@@ -128,23 +177,34 @@ app.get('/api/grade', async (req, res) => {
 
     const cumulativeResult = await pool.query(`
       SELECT 
-        ROUND(CAST(SUM(gr.gradepoint * cr.credits) / NULLIF(SUM(cr.credits), 0) AS NUMERIC), 2) as cumulative_gpa,
-        SUM(cr.credits) AS total_credits_used
-      FROM enrollment en
-      INNER JOIN course cr ON en.courseid = cr.courseid
-      INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
-      WHERE en.studentid = $1 AND en.grade IS NOT NULL AND en.grade NOT IN ('S', 'U')
+    studentid,
+    ROUND(SUM(gradepoint * credits) / NULLIF(SUM(credits), 0), 2) AS cumulative_gpa,  -- คำนวณ GPA รวม
+    SUM(credits) AS total_credits_used  -- รวมเครดิตทั้งหมดที่ใช้
+FROM (
+    SELECT DISTINCT
+        en.studentid,
+        en.courseid,
+        gr.gradepoint,
+		cr.credits
+    FROM enrollment en
+    INNER JOIN course cr ON en.courseid = cr.courseid
+    INNER JOIN grade gr ON TRIM(en.grade) = gr.gradeletter
+    WHERE en.studentid = $1
+        AND en.grade IS NOT NULL
+        AND en.grade NOT IN ('S', 'U')
+) AS FilteredCourses
+GROUP BY studentid
+ORDER BY studentid;
     `, [studentid]);
 
-    // เก็บ cumulative GPA และ total credits ไว้ในตัวแปรเพื่อใช้งานต่อ
     const cumulativeGPA = cumulativeResult.rows[0]?.cumulative_gpa || null;
     const totalCreditsUsed = cumulativeResult.rows[0]?.total_credits_used || 0;
 
     res.status(200).json({
       semesters: result.rows,
-      selectedGPS: result.rows[result.rows.length - 1],  // เลือกเทอมล่าสุด
+      selectedGPS: result.rows.length > 0 ? result.rows[result.rows.length - 1] : null,
       cumulativeGPA: cumulativeGPA,
-      totalCreditsUsed: totalCreditsUsed // เพิ่ม total credits used เข้าไปใน response
+      totalCreditsUsed: totalCreditsUsed
     });
   } catch (error) {
     console.error(error);
@@ -152,6 +212,7 @@ app.get('/api/grade', async (req, res) => {
   }
 });
 
+// Endpoint สำหรับดึงข้อมูล notifications
 app.get('/api/notifications', async (req, res) => {
   try {
     const query = `

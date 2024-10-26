@@ -11,6 +11,8 @@ const HomePage = () => {
     const [completedCredits, setCompletedCredits] = useState(null);
     const [remainingCredits, setRemainingCredits] = useState(null);
     const [cumulativeGPA, setCumulativeGPA] = useState(null);
+    const [genedCredits, setGenedCredits] = useState({ totalCredits: null, completedCredits: null, remainingCredits: null });
+    const [majorCredits, setMajorCredits] = useState({ totalCredits: null, completedCredits: null, remainingCredits: null });
 
     useEffect(() => {
         const fetchGPSData = async () => {
@@ -32,10 +34,6 @@ const HomePage = () => {
             }
         };
 
-        fetchGPSData();
-    }, []);
-
-    useEffect(() => {
         const fetchCreditsData = async () => {
             const studentid = localStorage.getItem('studentid');
             if (studentid) {
@@ -55,12 +53,32 @@ const HomePage = () => {
             }
         };
 
+        const fetchGenMajor = async () => {
+            const studentid = localStorage.getItem('studentid');
+            if (studentid) {
+                try {
+                    const response = await fetch(`http://localhost:5001/api/gened-major?studentid=${studentid}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setGenedCredits(data.gened);
+                        setMajorCredits(data.major);
+                    } else {
+                        console.error('Failed to fetch credits data:', data.error);
+                    }
+                } catch (error) {
+                    console.error('Error fetching credits data:', error);
+                }
+            }
+        };
+
+        fetchGPSData();
         fetchCreditsData();
+        fetchGenMajor();
     }, []);
 
     const handleSemesterChange = (event) => {
-        const selectedSemesterName = event.target.value;
-        const selected = semesters.find(sem => sem.semestername === selectedSemesterName);
+        const selectedSemesterId = event.target.value;
+        const selected = semesters.find(sem => sem.semesterid === selectedSemesterId);
         if (selected) {
             setSelectedSemester(selected);
         }
@@ -90,7 +108,7 @@ const HomePage = () => {
                     </div>
                     <div className="stat-box">
                         <Select
-                            value={selectedSemester?.semestername || ''}
+                            value={selectedSemester?.semesterid || ''}
                             onChange={handleSemesterChange}
                             variant="standard"
                             displayEmpty
@@ -98,10 +116,10 @@ const HomePage = () => {
                         >
                             {semesters.map((semester) => (
                                 <MenuItem
-                                    key={semester.semestername}
-                                    value={semester.semestername}
+                                    key={semester.semesterid}
+                                    value={semester.semesterid}
                                 >
-                                    <p>GPS {semester.semestername}</p>
+                                    <p>GPS {semester.semesterid}</p>
                                 </MenuItem>
                             ))}
                         </Select>
@@ -121,17 +139,17 @@ const HomePage = () => {
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
-                            <p>30</p>
+                            <p>{genedCredits.totalCredits !== null ? genedCredits.totalCredits : 'กำลังโหลด...'}</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ที่เรียนไปแล้ว</p>
-                            <p>6</p>
+                            <p>{genedCredits.completedCredits !== null ? genedCredits.completedCredits : 'กำลังโหลด...'}</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ขาดอีก</p>
-                            <p>24</p>
+                            <p>{genedCredits.remainingCredits !== null ? genedCredits.remainingCredits : 'กำลังโหลด...'}</p>
                             <p>หน่วยกิต</p>
                         </div>
                     </div>
@@ -143,17 +161,17 @@ const HomePage = () => {
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
-                            <p>105</p>
+                            <p>{majorCredits.totalCredits !== null ? majorCredits.totalCredits : 'กำลังโหลด...'}</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ที่เรียนไปแล้ว</p>
-                            <p>67</p>
+                            <p>{majorCredits.completedCredits !== null ? majorCredits.completedCredits : 'กำลังโหลด...'}</p>
                             <p>หน่วยกิต</p>
                         </div>
                         <div className="info-row">
                             <p>ขาดอีก</p>
-                            <p>38</p>
+                            <p>{majorCredits.remainingCredits !== null ? majorCredits.remainingCredits : 'กำลังโหลด...'}</p>
                             <p>หน่วยกิต</p>
                         </div>
                     </div>

@@ -5,7 +5,7 @@ import '../styles/Schedule.css';
 
 const Schedule = () => {
   const [currentSemester, setCurrentSemester] = useState('1/2565');
-  
+
   const semesters = [
     { id: '1/2565', name: 'ภาคเรียนที่ 1/2565' },
     { id: '2/2565', name: 'ภาคเรียนที่ 2/2565' },
@@ -22,20 +22,20 @@ const Schedule = () => {
   };
 
   const timeSlots = [
-    '8:00-9:00', 
-    '9:00-10:00', 
-    '10:00-11:00', 
-    '11:00-12:00', 
-    '12:00-13:00', 
-    '13:00-14:00', 
-    '14:00-15:00', 
-    '15:00-16:00', 
-    '16:00-17:00', 
-    '17:00-18:00', 
-    '18:00-19:00', 
+    '8:00-9:00',
+    '9:00-10:00',
+    '10:00-11:00',
+    '11:00-12:00',
+    '12:00-13:00',
+    '13:00-14:00',
+    '14:00-15:00',
+    '15:00-16:00',
+    '16:00-17:00',
+    '17:00-18:00',
+    '18:00-19:00',
     '19:00-20:00'
   ];
-  
+
   const days = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
 
   const timeToMinutes = (time) => {
@@ -46,7 +46,7 @@ const Schedule = () => {
   const findDisplaySlot = (startTime, endTime) => {
     const start = timeToMinutes(startTime);
     const end = timeToMinutes(endTime);
-    
+
     let startSlot = 0;
     let span = 0;
 
@@ -74,7 +74,7 @@ const Schedule = () => {
   const createDaySchedule = (day) => {
     const schedule = new Array(timeSlots.length).fill(null);
     const courses = courseData[currentSemester]?.filter(course => course.day === day) || [];
-    
+
     courses.forEach(course => {
       const { startSlot, span } = findDisplaySlot(course.startTime, course.endTime);
       schedule[startSlot] = { ...course, span };
@@ -83,7 +83,7 @@ const Schedule = () => {
         schedule[i] = 'spanned';
       }
     });
-    
+
     return schedule;
   };
 
@@ -134,8 +134,8 @@ const Schedule = () => {
                                 colSpan={item.span}
                                 style={{ position: 'relative' }} // จัดการตำแหน่ง
                               >
-                                <div 
-                                  className="course-card" 
+                                <div
+                                  className="course-card"
                                   style={{ backgroundColor: item.color }}
                                 >
                                   <div className="course-name">{item.name}</div>

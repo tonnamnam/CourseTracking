@@ -41,16 +41,16 @@ const CalGrade = () => {
         const completedCredits = parseInt(totalCreditsUsed);
         const targetGPA = parseFloat(desiredGrade);
         const futureCreditsValue = parseInt(futureCredits);
-    
-        if (!isNaN(currentGPA) && !isNaN(completedCredits) && 
-            !isNaN(targetGPA) && !isNaN(futureCreditsValue) && 
+
+        if (!isNaN(currentGPA) && !isNaN(completedCredits) &&
+            !isNaN(targetGPA) && !isNaN(futureCreditsValue) &&
             futureCreditsValue > 0) {
-            
+
             const totalPoints = currentGPA * completedCredits;
             const targetTotalPoints = targetGPA * (completedCredits + futureCreditsValue);
             const neededPoints = targetTotalPoints - totalPoints;
             const requiredGPA = neededPoints / futureCreditsValue;
-    
+
             if (requiredGPA > 4.0) {
                 setResult(`ไม่สามารถทำได้ เนื่องจากต้องได้เกรด ${requiredGPA.toFixed(2)} ซึ่งเกินกว่า 4.00`);
             } else if (requiredGPA < 0) {
@@ -63,7 +63,7 @@ const CalGrade = () => {
             setError('กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง');
             setResult('');
         }
-    };    
+    };
 
     // แสดงเกรดโดยตรวจสอบค่าก่อน
     const displayGPA = () => {
