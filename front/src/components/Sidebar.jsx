@@ -7,6 +7,7 @@ const Sidebar = () => {
     const navigate = useNavigate();  // Hook for navigation
 
     const handleLogout = () => {
+        localStorage.removeItem('studentid');
         // Add your logout logic here, e.g., clear user session, token, etc.
         console.log("User logged out");
         // After logout, you might want to navigate to the login page or home

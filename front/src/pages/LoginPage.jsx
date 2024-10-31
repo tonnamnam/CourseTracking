@@ -50,24 +50,6 @@ const LoginPage = () => {
       setError('การล็อกอินล้มเหลว กรุณาลองใหม่อีกครั้ง');
     }
   };
-
-  // const handleGoogleSuccess = (credentialResponse) => {
-  //   const decoded = jwtDecode(credentialResponse.credential);
-  //   const email = decoded.email;
-  //   
-  //   if (email.endsWith('@kmitl.ac.th')) {
-  //     // ดำเนินการล็อกอินสำเร็จ
-  //     console.log('Logged in with Google:', email);
-  //     navigate('/home');
-  //   } else {
-  //     setError('กรุณาใช้อีเมล @kmitl.ac.th เท่านั้น');
-  //   }
-  // };
-
-  // const handleGoogleFailure = () => {
-  //   setError('การล็อกอินด้วย Google ไม่สำเร็จ กรุณาลองอีกครั้ง');
-  // };
-
   return (
     <>
       <GlobalStyles
@@ -120,15 +102,6 @@ const LoginPage = () => {
             >
               LOGIN
             </OrangeButton>
-            {/* ส่วนสำหรับล็อกอินด้วย Google ถูกคอมเมนต์ออก
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleFailure}
-                clientId="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
-              />
-            </Box>
-            */}
           </Box>
         </Container>
       </Box>

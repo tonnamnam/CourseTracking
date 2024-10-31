@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "../styles/Popup.css";
 
-const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) => {
-    const [selectedTab, setSelectedTab] = useState("completed");
+const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
+    const [selectedTab, setSelectedTab] = useState("completedRequired");
 
     const toggleTab = (tab) => {
         setSelectedTab(tab);
@@ -13,17 +13,29 @@ const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) =>
             <div className="popup-content">
                 <h3>{title}</h3>
                 
-                {/* Toggle buttons */}
+                {/* Four toggle buttons */}
                 <div className="toggle-buttons">
-                    <button 
-                        className={selectedTab === "completed" ? "active" : ""} 
-                        onClick={() => toggleTab("completed")}
+                    <button
+                        className={selectedTab === "completedRequired" ? "active" : ""}
+                        onClick={() => toggleTab("completedRequired")}
+                    >
+                        วิชาบังคับที่เรียนไปแล้ว
+                    </button>
+                    <button
+                        className={selectedTab === "uncompletedRequired" ? "active" : ""}
+                        onClick={() => toggleTab("uncompletedRequired")}
+                    >
+                        วิชาบังคับที่ยังไม่เรียน
+                    </button>
+                    <button
+                        className={selectedTab === "completedOptional" ? "active" : ""}
+                        onClick={() => toggleTab("completedOptional")}
                     >
                         วิชาเลือกที่เรียนไปแล้ว
                     </button>
-                    <button 
-                        className={selectedTab === "uncompleted" ? "active" : ""} 
-                        onClick={() => toggleTab("uncompleted")}
+                    <button
+                        className={selectedTab === "uncompletedOptional" ? "active" : ""}
+                        onClick={() => toggleTab("uncompletedOptional")}
                     >
                         วิชาเลือกที่ยังไม่เรียน
                     </button>
@@ -40,7 +52,7 @@ const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) =>
                         </tr>
                     </thead>
                     <tbody>
-                        {(selectedTab === "completed" ? completedSubjects : uncompletedSubjects).map((subject, index) => (
+                        {(subjectsByCategory[selectedTab] || []).map((subject, index) => (
                             <tr key={index}>
                                 <td>{subject.code}</td>
                                 <td>{subject.name}</td>
@@ -57,4 +69,4 @@ const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) =>
     );
 };
 
-export default Popup;
+export default Popup2;

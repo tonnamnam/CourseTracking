@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import Navbar from "../components/Navbar.jsx";
-import Popup from "../components/Popup.jsx"
+import Popup from "../components/Popup.jsx";
+import Popup2 from "../components/Popup2.jsx";
 import "../styles/Homepage.css";
 import { Select, MenuItem } from "@mui/material";
 
@@ -19,6 +20,7 @@ const HomePage = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [popupTitle, setPopupTitle] = useState("");
     const [popupSubjects, setPopupSubjects] = useState([]);
+    const [isMajorPopup, setIsMajorPopup] = useState(false);
 
     useEffect(() => {
         const fetchGPSData = async () => {
@@ -91,20 +93,55 @@ const HomePage = () => {
     };
 
     // Function to open popup with given title and subjects
-    const openPopup = (title, subjects) => {
+    const openPopupGened = (title, completed, uncompleted) => {
         setPopupTitle(title);
-        setPopupSubjects(subjects);
+        setPopupSubjects({ completed, uncompleted });
         setIsPopupOpen(true);
+        setIsMajorPopup(false); // Set to use Popup (2-toggle)
     };
-
+    const openPopupMajor = (title, completedReq, uncompletedReq, completedOpt, uncompletedOpt) => {
+        setPopupTitle(title);
+        setPopupSubjects({
+            completedRequired: completedReq,
+            uncompletedRequired: uncompletedReq,
+            completedOptional: completedOpt,
+            uncompletedOptional: uncompletedOpt,
+        });
+        setIsPopupOpen(true);
+        setIsMajorPopup(true); // Set to use Popup2 (4-toggle)
+    };
     // Function to close the popup
     const closePopup = () => {
         setIsPopupOpen(false);
     };
 
-    // Sample subjects data for demonstration
-    const genedSubjects = ["GENED101: Introduction to Humanities", "GENED102: Social Science Basics", "GENED103: Natural Science"];
-    const majorSubjects = ["MAJOR201: Advanced Algorithms", "MAJOR202: Data Structures", "MAJOR203: Software Engineering"];
+    const completedGenedSubjects = [
+        { code: "90000000", name: "Art of emotion", credits: 3, grade: "A" },
+        { code: "90000001", name: "Fun with coding", credits: 3, grade: "A" },
+        { code: "90000002", name: "English For Communication", credits: 3, grade: "A" },
+    ];
+    const uncompletedGenedSubjects = [
+        { code: "90000003", name: "Critical Thinking", credits: 3, grade: "-" },
+        { code: "90000004", name: "Introduction to Philosophy", credits: 3, grade: "-" },
+    ];
+    const completedMajorSubjectsReq = [
+        { code: "90000000", name: "Programming Fundamental", credits: 3, grade: "A" },
+        { code: "90000001", name: "Datacom", credits: 3, grade: "A" },
+        { code: "90000002", name: "Calculus", credits: 3, grade: "A" },
+    ];
+    const uncompletedMajorSubjectsReq = [
+        { code: "90000003", name: "Computer Graphics", credits: 3, grade: "-" },
+        { code: "90000004", name: "Software Engineering", credits: 3, grade: "-" },
+    ];
+    const completedMajorSubjectsOptional = [
+        { code: "90000000", name: "Data Mining", credits: 3, grade: "A" },
+        { code: "90000001", name: "Blockchain", credits: 3, grade: "A" },
+        { code: "90000002", name: "Software Design", credits: 3, grade: "A" },
+    ];
+    const uncompletedMajorSubjectsOptional = [
+        { code: "90000003", name: "Machine Learning", credits: 3, grade: "-" },
+        { code: "90000004", name: "Cyber Security", credits: 6, grade: "-" },
+    ];
 
     return (
         <div className="homepage-container">
@@ -157,7 +194,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>GENED</h3>
-                            <p onClick={() => openPopup("GENED Subjects", genedSubjects)}>ดูวิชาเรียน</p>
+                            <p onClick={() => openPopupGened("GENED Subjects", completedGenedSubjects, uncompletedGenedSubjects)}>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -179,7 +216,9 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>วิชาภาค</h3>
-                            <p onClick={() => openPopup("Major Subjects", majorSubjects)}>ดูวิชาเรียน</p>
+                            <p onClick={() => openPopupMajor("Major Subjects", completedMajorSubjectsReq, uncompletedMajorSubjectsReq, completedMajorSubjectsOptional, uncompletedMajorSubjectsOptional)}>
+                                ดูวิชาเรียน
+                            </p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -201,11 +240,20 @@ const HomePage = () => {
             </div>
             {/* Popup Component */}
             {isPopupOpen && (
-                <Popup
-                    closePopup={closePopup}
-                    title={popupTitle}
-                    subjects={popupSubjects}
-                />
+                isMajorPopup ? (
+                    <Popup2
+                        closePopup={closePopup}
+                        title={popupTitle}
+                        subjectsByCategory={popupSubjects}
+                    />
+                ) : (
+                    <Popup
+                        closePopup={closePopup}
+                        title={popupTitle}
+                        completedSubjects={popupSubjects.completed}
+                        uncompletedSubjects={popupSubjects.uncompleted}
+                    />
+                )
             )}
         </div>
     );
