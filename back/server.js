@@ -38,6 +38,40 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.get('/api/schedule/:studentId', async (req, res) => {
+  const { studentId } = req.params;
+  try {
+    const result = await pool.query(`
+      SELECT DISTINCT 
+    sm.semesterid,
+    cr.courseid,
+    cr.coursename,
+    cr.courseformat,
+    cr.coursetimes->>'day' AS day,
+    cr.coursetimes->>'start' AS startTime,
+    cr.coursetimes->>'end' AS endTime
+FROM semester sm
+JOIN enrollment en ON en.semesterid = sm.semesterid
+JOIN course cr ON cr.courseid = en.courseid AND en.section = cr.section aND cr.semester = en.semesterid
+WHERE en.studentid = $1
+ORDER BY sm.semesterid;
+    `,[studentId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'ไม่พบข้อมูลตารางเรียน' });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: result.rows
+    });
+
+  } catch (error) {
+    console.error('Error fetching student courses:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูลตารางเรียน' });
+  }
+});
+
 // Endpoint สำหรับดึงข้อมูลหน่วยกิตที่ต้องเรียน (แก้ไขให้ใช้ StudentID)
 app.get('/api/major-requirements', async (req, res) => {
   const { studentid } = req.query;

@@ -1,86 +1,139 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from "../components/Sidebar.jsx";
 import Navbar from "../components/Navbar.jsx";
 import '../styles/Schedule.css';
 
 const Schedule = () => {
-  const [currentSemester, setCurrentSemester] = useState('1/2565');
+  const [currentSemester, setCurrentSemester] = useState(null);
+  const [courses, setCourses] = useState({});
+  const [semesters, setSemesters] = useState([]);
+  const [courseColors, setCourseColors] = useState({});
 
-  const semesters = [
-    { id: '1/2565', name: 'ภาคเรียนที่ 1/2565' },
-    { id: '2/2565', name: 'ภาคเรียนที่ 2/2565' },
-    { id: '1/2566', name: 'ภาคเรียนที่ 1/2566' }
-  ];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const studentId = localStorage.getItem('studentid');
+        const response = await fetch(`http://localhost:5001/api/schedule/${studentId}`);
+        const data = await response.json();
 
-  const courseData = {
-    '1/2565': [
-      { id: 'CS101', name: 'COMPUTER ETHICS: SOCIAL AND PROFESSIONAL ISSUES', type: 'ทฤษฎี', day: 'จันทร์', startTime: '09:00', endTime: '11:00', color: '#4CAF50' },
-      { id: 'CS101', name: 'การเขียนโปรแกรม 1', type: 'ปฏิบัติ', day: 'จันทร์', startTime: '14:00', endTime: '16:00', color: '#4CAF50' },
-      { id: 'CS102', name: 'คณิตศาสตร์คอมพิวเตอร์', type: 'ทฤษฎี', day: 'อังคาร', startTime: '08:00', endTime: '10:00', color: '#2196F3' },
-      { id: 'CS103', name: 'การเขียนโปรแกรมจ้า', type: 'ทฤษฎี', day: 'เสาร์', startTime: '08:00', endTime: '18:00', color: '#9F0D7F' },
-    ]
+        if (data.success) {
+          const colors = {};
+          data.data.forEach(course => {
+            if (!colors[course.courseid]) {
+              colors[course.courseid] = getRandomColor();
+            }
+          });
+          setCourseColors(colors);
+
+          const courseBySemester = data.data.reduce((acc, course) => {
+            if (!course.day) return acc;
+
+            const semesterId = course.semesterid;
+            if (!acc[semesterId]) {
+              acc[semesterId] = [];
+            }
+
+            acc[semesterId].push({
+              id: course.courseid,
+              name: course.coursename,
+              type: course.courseformat,
+              day: course.day,
+              startTime: course.starttime,
+              endTime: course.endtime,
+              color: colors[course.courseid]
+            });
+
+            return acc;
+          }, {});
+
+          const semesterList = [...new Set(data.data.map(course => course.semesterid))]
+            .sort()
+            .reverse()
+            .map(id => ({
+              id: id,
+              name: `ภาคเรียนที่ ${id}`
+            }));
+
+          setCourses(courseBySemester);
+          setSemesters(semesterList);
+          setCurrentSemester(semesterList[0]?.id);
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const getRandomColor = () => {
+    const colors = ['#4CAF50', '#2196F3', '#9F0D7F', '#FF9800', '#E91E63', '#673AB7', '#3F51B5', '#009688'];
+    return colors[Math.floor(Math.random() * colors.length)];
   };
 
-  const timeSlots = [
-    '8:00-9:00',
-    '9:00-10:00',
-    '10:00-11:00',
-    '11:00-12:00',
-    '12:00-13:00',
-    '13:00-14:00',
-    '14:00-15:00',
-    '15:00-16:00',
-    '16:00-17:00',
-    '17:00-18:00',
-    '18:00-19:00',
-    '19:00-20:00'
-  ];
+  // Generate time slots with 15-minute intervals
+  const timeSlots = [];
+  for (let hour = 8; hour < 20; hour++) {
+    for (let minute = 0; minute < 60; minute += 15) {
+      const startTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      const endHour = minute === 45 ? hour + 1 : hour;
+      const endMinute = minute === 45 ? 0 : minute + 15;
+      const endTime = `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;
+      timeSlots.push(`${startTime}-${endTime}`);
+    }
+  }
 
-  const days = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const timeToMinutes = (time) => {
+    if (!time) return 0;
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   };
 
   const findDisplaySlot = (startTime, endTime) => {
+    if (!startTime || !endTime) return { startSlot: 0, span: 1 };
+  
     const start = timeToMinutes(startTime);
     const end = timeToMinutes(endTime);
-
-    let startSlot = 0;
-    let span = 0;
-
-    // หาช่องเริ่มต้น
-    for (let i = 0; i < timeSlots.length; i++) {
-      const [slotStart] = timeSlots[i].split('-').map(timeToMinutes);
-      if (start >= slotStart && (i === timeSlots.length - 1 || start < timeToMinutes(timeSlots[i + 1].split('-')[0]))) {
-        startSlot = i;
-        break;
-      }
-    }
-
-    // หาจำนวนช่องที่ต้อง span
-    for (let i = startSlot; i < timeSlots.length; i++) {
-      const [, slotEnd] = timeSlots[i].split('-').map(timeToMinutes);
-      if (end <= slotEnd) {
-        span = i === startSlot ? 1 : i - startSlot + 1; // ปรับการ span ให้ถูกต้อง
-        break;
-      }
-    }
-
+    const slotDuration = 15;
+    const dayStartMinutes = timeToMinutes('08:00');
+    
+    // Calculate slot positions
+    const startSlot = Math.max(0, Math.floor((start - dayStartMinutes) / slotDuration));
+    const span = Math.max(1, Math.ceil((end - start) / slotDuration)); // Ensure at least 1 slot span
+  
     return { startSlot, span };
   };
-
+  
   const createDaySchedule = (day) => {
     const schedule = new Array(timeSlots.length).fill(null);
-    const courses = courseData[currentSemester]?.filter(course => course.day === day) || [];
+    const semesterCourses = courses[currentSemester] || [];
+    
+    const dayCourses = semesterCourses.filter(course => 
+      course.day?.toLowerCase() === day.toLowerCase()
+    );
 
-    courses.forEach(course => {
-      const { startSlot, span } = findDisplaySlot(course.startTime, course.endTime);
-      schedule[startSlot] = { ...course, span };
-      // ทำเครื่องหมายช่องที่ถูก span
-      for (let i = startSlot + 1; i < startSlot + span; i++) {
-        schedule[i] = 'spanned';
+    dayCourses.sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+
+    dayCourses.forEach(course => {
+      if (course.startTime && course.endTime) {
+        const { startSlot, span } = findDisplaySlot(course.startTime, course.endTime);
+        
+        let canPlace = true;
+        for (let i = startSlot; i < startSlot + span; i++) {
+          if (schedule[i] !== null) {
+            canPlace = false;
+            break;
+          }
+        }
+
+        if (canPlace) {
+          schedule[startSlot] = { ...course, span };
+          for (let i = startSlot + 1; i < startSlot + span; i++) {
+            schedule[i] = 'spanned';
+          }
+        }
       }
     });
 
@@ -90,71 +143,84 @@ const Schedule = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1">
         <Navbar />
-        <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">
-          <div className="schedule-container">
-            <div className="semester-select-container mb-6">
-              <select
-                value={currentSemester}
-                onChange={(e) => setCurrentSemester(e.target.value)}
-                className="semester-select"
-              >
-                {semesters.map(semester => (
-                  <option key={semester.id} value={semester.id}>
-                    {semester.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="schedule-container">
+          <div className="semester-select-container">
+            <select
+              value={currentSemester || ''}
+              onChange={(e) => setCurrentSemester(e.target.value)}
+              className="semester-select"
+            >
+              <option value="">เลือกภาคการศึกษา</option>
+              {semesters.map(semester => (
+                <option key={semester.id} value={semester.id}>
+                  {semester.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <div className="schedule-table-container">
-              <table className="schedule-table">
-                <thead>
-                  <tr>
-                    <th className="schedule-header">วัน/เวลา</th>
-                    {timeSlots.map(slot => (
-                      <th key={slot} className="schedule-header">{slot}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {days.map(day => {
-                    const schedule = createDaySchedule(day);
+          <div className="schedule-table-container">
+            <table className="schedule-table">
+              <thead>
+                <tr>
+                  <th className="schedule-header">วัน/เวลา</th>
+                  {Array.from({ length: 12 }, (_, i) => {
+                    const hour = i + 8;
                     return (
-                      <tr key={day}>
-                        <td className="schedule-cell">{day}</td>
-                        {schedule.map((item, index) => {
-                          if (item === 'spanned') return null;
-                          if (item) {
-                            return (
-                              <td
-                                key={index}
-                                className="schedule-cell"
-                                colSpan={item.span}
-                                style={{ position: 'relative' }} // จัดการตำแหน่ง
-                              >
-                                <div
-                                  className="course-card"
-                                  style={{ backgroundColor: item.color }}
-                                >
-                                  <div className="course-name">{item.name}</div>
-                                  <div className="course-type">{item.type}</div>
-                                  <div className="course-time">{`${item.startTime}-${item.endTime}`}</div>
-                                </div>
-                              </td>
-                            );
-                          }
-                          return <td key={index} className="schedule-cell" />;
-                        })}
-                      </tr>
+                      <th key={hour} colSpan={4} className="schedule-header hour-header">
+                        {`${hour.toString().padStart(2, '0')}:00-${(hour + 1).toString().padStart(2, '0')}:00`}
+                      </th>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
+                </tr>
+                <tr>
+                  <th className="schedule-header"></th>
+                  {Array.from({ length: 48 }, (_, i) => (
+                    <th key={i} className="schedule-header subslot-header">
+                      {(i % 4 === 0) ? '00' : 
+                       (i % 4 === 1) ? '15' : 
+                       (i % 4 === 2) ? '30' : '45'}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {days.map(day => {
+                  const schedule = createDaySchedule(day);
+                  return (
+                    <tr key={day}>
+                      <td className="schedule-cell">{day}</td>
+                      {schedule.map((item, index) => {
+                        if (item === 'spanned') return null;
+                        if (item) {
+                          return (
+                            <td
+                              key={index}
+                              className="schedule-cell"
+                              colSpan={item.span}
+                            >
+                              <div
+                                className="course-card"
+                                style={{ backgroundColor: item.color }}
+                              >
+                                <div className="course-name">{item.name}</div>
+                                <div className="course-type">{item.type}</div>
+                                <div className="course-time">{`${item.startTime}-${item.endTime}`}</div>
+                              </div>
+                            </td>
+                          );
+                        }
+                        return <td key={index} className="schedule-cell" />;
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );
