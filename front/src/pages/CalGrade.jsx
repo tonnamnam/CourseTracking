@@ -80,24 +80,24 @@ const CalGrade = () => {
                 <Navbar />
                 <div className="grade-info">
                     <h2>
-                        เกรดของคุณคือ {displayGPA()}
+                        เกรดของคุณ คือ {displayGPA()}
                     </h2>
                 </div>
                 <div className="form-group">
                     <label>ป้อนเกรดที่คุณต้องการ</label>
                     <input
                         type="text"
-                        placeholder="x.xx"
+                        placeholder="ex. 3.50"
                         value={desiredGrade}
                         onChange={(e) => setDesiredGrade(e.target.value)}
                         className="input-field"
                     />
                 </div>
                 <div className="form-group">
-                    <label>ป้อนหน่วยกิตที่คุณต้องการ</label>
+                    <label>ป้อนจำนวนหน่วยกิตที่คุณวางแผนจะลงเรียน</label>
                     <input
                         type="number"
-                        placeholder="xx"
+                        placeholder="ex. 27"
                         value={futureCredits}
                         onChange={(e) => setFutureCredits(e.target.value)}
                         className="input-field"

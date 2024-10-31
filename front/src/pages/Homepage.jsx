@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import Navbar from "../components/Navbar.jsx";
+import Popup from "../components/Popup.jsx"
 import "../styles/Homepage.css";
-import { Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { Select, MenuItem } from "@mui/material";
 
 const HomePage = () => {
     const [selectedSemester, setSelectedSemester] = useState(null);
@@ -13,6 +14,11 @@ const HomePage = () => {
     const [cumulativeGPA, setCumulativeGPA] = useState(null);
     const [genedCredits, setGenedCredits] = useState({ totalCredits: null, completedCredits: null, remainingCredits: null });
     const [majorCredits, setMajorCredits] = useState({ totalCredits: null, completedCredits: null, remainingCredits: null });
+
+    // State to control popup visibility and content
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [popupTitle, setPopupTitle] = useState("");
+    const [popupSubjects, setPopupSubjects] = useState([]);
 
     useEffect(() => {
         const fetchGPSData = async () => {
@@ -84,6 +90,22 @@ const HomePage = () => {
         }
     };
 
+    // Function to open popup with given title and subjects
+    const openPopup = (title, subjects) => {
+        setPopupTitle(title);
+        setPopupSubjects(subjects);
+        setIsPopupOpen(true);
+    };
+
+    // Function to close the popup
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    };
+
+    // Sample subjects data for demonstration
+    const genedSubjects = ["GENED101: Introduction to Humanities", "GENED102: Social Science Basics", "GENED103: Natural Science"];
+    const majorSubjects = ["MAJOR201: Advanced Algorithms", "MAJOR202: Data Structures", "MAJOR203: Software Engineering"];
+
     return (
         <div className="homepage-container">
             <Sidebar />
@@ -135,7 +157,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>GENED</h3>
-                            <p>ดูวิชาเรียน</p>
+                            <p onClick={() => openPopup("GENED Subjects", genedSubjects)}>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -157,7 +179,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>วิชาภาค</h3>
-                            <p>ดูวิชาเรียน</p>
+                            <p onClick={() => openPopup("Major Subjects", majorSubjects)}>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>
@@ -177,6 +199,14 @@ const HomePage = () => {
                     </div>
                 </div>
             </div>
+            {/* Popup Component */}
+            {isPopupOpen && (
+                <Popup
+                    closePopup={closePopup}
+                    title={popupTitle}
+                    subjects={popupSubjects}
+                />
+            )}
         </div>
     );
 };

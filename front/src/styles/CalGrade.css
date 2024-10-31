@@ -3,7 +3,8 @@
 }
 
 .content {
-    margin-left: 20vw; /* ให้เนื้อหาหลักเริ่มหลัง Sidebar */
+    margin-left: 20vw;
+    /* ให้เนื้อหาหลักเริ่มหลัง Sidebar */
     padding: 20px;
     background-color: #f9f9f9;
 }
@@ -15,6 +16,7 @@
 
 .form-group {
     margin: 15px 0;
+    padding: 10px;
     text-align: center;
 }
 
@@ -25,22 +27,26 @@
 }
 
 .input-field {
-    width: 50%;
+    width: 20%;
     padding: 10px;
     font-size: 16px;
     margin-bottom: 10px;
     text-align: center;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .calculate-button {
     background-color: #ff6f3e;
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 18px;
+    padding: 8px 20px;
+    font-size: 16px;
     cursor: pointer;
     display: block;
     margin: 0 auto;
+    border-radius: 8px;
 }
 
 .calculate-button:hover {
@@ -58,4 +64,5 @@
     text-align: center;
     font-size: 16px;
     margin-top: 10px;
+    padding: 10px;
 }
