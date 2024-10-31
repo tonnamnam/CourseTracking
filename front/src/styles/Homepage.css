@@ -46,6 +46,13 @@ body {
     text-align: center;
 }
 
+.stat-box h {
+    margin: 0;
+    font-size: 12px;
+    color: rgb(209, 209, 209);
+    text-align: center;
+}
+
 .stat-box h2 {
     margin: 10px 0;
     font-size: 28px;

@@ -156,6 +156,7 @@ const HomePage = () => {
                     <div className="stat-box">
                         <p>หน่วยกิตที่เรียนไปแล้ว</p>
                         <h2>{completedCredits !== null ? completedCredits : 'กำลังโหลด...'}</h2>
+                        <h>*รวมวิชาของเทอมล่าสุดที่เกรดยังไม่ออก*</h>
                     </div>
                     <div className="stat-box">
                         <p>หน่วยกิตที่ขาด</p>
@@ -194,7 +195,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>GENED</h3>
-                            <p onClick={() => openPopupGened("GENED Subjects", completedGenedSubjects, uncompletedGenedSubjects)}>ดูวิชาเรียน</p>
+                            <p onClick={() => openPopupGened("GENED", completedGenedSubjects, uncompletedGenedSubjects)}>ดูวิชาเรียน</p>
                         </div>
                         <div className="info-row">
                             <p>ที่ต้องเรียน</p>

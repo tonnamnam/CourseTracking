@@ -80,11 +80,11 @@ const CalGrade = () => {
                 <Navbar />
                 <div className="grade-info">
                     <h2>
-                        เกรดของคุณ คือ {displayGPA()}
+                        เกรดของคุณในปัจจุบัน คือ {displayGPA()}
                     </h2>
                 </div>
                 <div className="form-group">
-                    <label>ป้อนเกรดที่คุณต้องการ</label>
+                    <label>ป้อนเกรดที่คุณตั้งเป้าหมาย</label>
                     <input
                         type="text"
                         placeholder="ex. 3.50"

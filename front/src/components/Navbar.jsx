@@ -29,9 +29,12 @@ const Navbar = () => {
     // ในส่วนของ useEffect ที่ดึงข้อมูล notifications
     useEffect(() => {
         const fetchNotifications = async () => {
+            const studentid = localStorage.getItem('studentid');
             try {
-                const response = await fetch('http://localhost:5001/api/notifications');
+                const response = await fetch(`http://localhost:5001/api/notifications?studentid=${studentid}`);
                 const data = await response.json();
+
+                console.log('Fetched notifications:', data);
 
                 // แปลงข้อมูลให้อยู่ในรูปแบบที่ต้องการ
                 const formattedNotifications = data.map(notification => {

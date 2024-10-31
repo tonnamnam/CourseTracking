@@ -248,26 +248,30 @@ ORDER BY studentid;
 
 // Endpoint สำหรับดึงข้อมูล notifications
 app.get('/api/notifications', async (req, res) => {
+  const { studentid } = req.query;
   try {
     const query = `
-      SELECT notificationid, detail, startdate, enddate
+      SELECT notificationid, detail, startdate, enddate, studentid
       FROM public.notification
       WHERE 
-        (
-          enddate IS NULL AND 
-          CURRENT_DATE >= (startdate - INTERVAL '14 days') AND
-          CURRENT_DATE < (startdate + INTERVAL '1 day')
-        )
-        OR
-        (
-          enddate IS NOT NULL AND 
-          CURRENT_DATE >= (startdate - INTERVAL '14 days') AND
-          CURRENT_DATE < (enddate + INTERVAL '1 day')
-        )
+          (
+              (
+                  enddate IS NULL AND 
+                  CURRENT_DATE >= (startdate - INTERVAL '14 days') AND
+                  CURRENT_DATE < (startdate + INTERVAL '1 day')
+              )
+              OR
+              (
+                  enddate IS NOT NULL AND 
+                  CURRENT_DATE >= (startdate - INTERVAL '14 days') AND
+                  CURRENT_DATE < (enddate + INTERVAL '1 day')
+              )
+          )
+          AND (studentid IS NULL OR studentid = $1)
       ORDER BY startdate;
     `;
 
-    const result = await pool.query(query);
+    const result = await pool.query(query, [studentid]);
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching notifications:', error);
