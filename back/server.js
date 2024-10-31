@@ -44,6 +44,7 @@ app.get('/api/schedule/:studentId', async (req, res) => {
     const result = await pool.query(`
       SELECT DISTINCT 
     sm.semesterid,
+	sm.year,
     cr.courseid,
     cr.coursename,
     cr.courseformat,
@@ -54,8 +55,8 @@ FROM semester sm
 JOIN enrollment en ON en.semesterid = sm.semesterid
 JOIN course cr ON cr.courseid = en.courseid AND en.section = cr.section aND cr.semester = en.semesterid
 WHERE en.studentid = $1
-ORDER BY sm.semesterid;
-    `,[studentId]);
+ORDER BY sm.year,sm.semesterid;
+    `, [studentId]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'ไม่พบข้อมูลตารางเรียน' });

@@ -46,17 +46,20 @@ const Schedule = () => {
             return acc;
           }, {});
 
-          const semesterList = [...new Set(data.data.map(course => course.semesterid))]
-            .sort()
-            .reverse()
+          const semesterList = [...new Set(data.data.map(course => `${course.semesterid}`))]
+            .sort((a, b) => {
+              const [semesterA, yearA] = a.split('/').map(Number);
+              const [semesterB, yearB] = b.split('/').map(Number);
+              return yearA - yearB || semesterA - semesterB;
+            })
             .map(id => ({
-              id: id,
+              id,
               name: `ภาคเรียนที่ ${id}`
             }));
 
           setCourses(courseBySemester);
           setSemesters(semesterList);
-          setCurrentSemester(semesterList[0]?.id);
+          setCurrentSemester(semesterList[semesterList.length - 1]?.id);
         }
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -93,24 +96,24 @@ const Schedule = () => {
 
   const findDisplaySlot = (startTime, endTime) => {
     if (!startTime || !endTime) return { startSlot: 0, span: 1 };
-  
+
     const start = timeToMinutes(startTime);
     const end = timeToMinutes(endTime);
     const slotDuration = 15;
     const dayStartMinutes = timeToMinutes('08:00');
-    
+
     // Calculate slot positions
     const startSlot = Math.max(0, Math.floor((start - dayStartMinutes) / slotDuration));
     const span = Math.max(1, Math.ceil((end - start) / slotDuration)); // Ensure at least 1 slot span
-  
+
     return { startSlot, span };
   };
-  
+
   const createDaySchedule = (day) => {
     const schedule = new Array(timeSlots.length).fill(null);
     const semesterCourses = courses[currentSemester] || [];
-    
-    const dayCourses = semesterCourses.filter(course => 
+
+    const dayCourses = semesterCourses.filter(course =>
       course.day?.toLowerCase() === day.toLowerCase()
     );
 
@@ -119,7 +122,7 @@ const Schedule = () => {
     dayCourses.forEach(course => {
       if (course.startTime && course.endTime) {
         const { startSlot, span } = findDisplaySlot(course.startTime, course.endTime);
-        
+
         let canPlace = true;
         for (let i = startSlot; i < startSlot + span; i++) {
           if (schedule[i] !== null) {
@@ -179,9 +182,9 @@ const Schedule = () => {
                   <th className="schedule-header"></th>
                   {Array.from({ length: 48 }, (_, i) => (
                     <th key={i} className="schedule-header subslot-header">
-                      {(i % 4 === 0) ? '00' : 
-                       (i % 4 === 1) ? '15' : 
-                       (i % 4 === 2) ? '30' : '45'}
+                      {(i % 4 === 0) ? '00' :
+                        (i % 4 === 1) ? '15' :
+                          (i % 4 === 2) ? '30' : '45'}
                     </th>
                   ))}
                 </tr>
