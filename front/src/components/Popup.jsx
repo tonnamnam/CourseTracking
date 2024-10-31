@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close"; // Import the Close icon from Material-UI
 import "../styles/Popup.css";
 
 const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) => {
@@ -11,7 +12,11 @@ const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) =>
     return (
         <div className="popup-overlay">
             <div className="popup-content">
-                <h3>{title}</h3>
+                {/* Wrap header and close icon */}
+                <div className="popup-header">
+                    <h3>{title}</h3>
+                    <CloseIcon className="close-icon" onClick={closePopup} />
+                </div>
                 
                 {/* Toggle buttons */}
                 <div className="toggle-buttons">
@@ -30,28 +35,28 @@ const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) =>
                 </div>
                 
                 {/* Table content based on selected tab */}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>รหัสวิชา</th>
-                            <th>ชื่อวิชา</th>
-                            <th>หน่วยกิต</th>
-                            <th>เกรด</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {(selectedTab === "completed" ? completedSubjects : uncompletedSubjects).map((subject, index) => (
-                            <tr key={index}>
-                                <td>{subject.code}</td>
-                                <td>{subject.name}</td>
-                                <td>{subject.credits}</td>
-                                <td>{subject.grade}</td>
+                <div className="popup-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>รหัสวิชา</th>
+                                <th>ชื่อวิชา</th>
+                                <th>หน่วยกิต</th>
+                                <th>เกรด</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                <button onClick={closePopup}>Close</button>
+                        </thead>
+                        <tbody>
+                            {(selectedTab === "completed" ? completedSubjects : uncompletedSubjects).map((subject, index) => (
+                                <tr key={index}>
+                                    <td>{subject.code}</td>
+                                    <td>{subject.name}</td>
+                                    <td>{subject.credits}</td>
+                                    <td>{subject.grade}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

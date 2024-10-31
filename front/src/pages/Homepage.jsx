@@ -16,6 +16,12 @@ const HomePage = () => {
     const [genedCredits, setGenedCredits] = useState({ totalCredits: null, completedCredits: null, remainingCredits: null });
     const [majorCredits, setMajorCredits] = useState({ totalCredits: null, completedCredits: null, remainingCredits: null });
 
+    const [completedGenedSubjects, setCompletedGenedSubjects] = useState([]);
+    const [uncompletedGenedSubjects, setUncompletedGenedSubjects] = useState([]);
+    const [completedMajorSubjectsReq, setCompletedMajorSubjectsReq] = useState([]);
+    const [uncompletedMajorSubjectsReq, setUncompletedMajorSubjectsReq] = useState([]);
+    const [completedMajorSubjectsOptional, setCompletedMajorSubjectsOptional] = useState([]);
+    const [uncompletedMajorSubjectsOptional, setUncompletedMajorSubjectsOptional] = useState([]);
     // State to control popup visibility and content
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [popupTitle, setPopupTitle] = useState("");
@@ -79,9 +85,63 @@ const HomePage = () => {
             }
         };
 
+        const fetchSubjects = async () => {
+            const studentId = localStorage.getItem('studentid');
+            try {
+                const [genedCompleted, genedUncompleted, majorReqCompleted, majorReqUncompleted, majorOptCompleted, majorOptUncompleted] = await Promise.all([
+                    fetch(`http://localhost:5001/api/completed-gened/${studentId}`).then(res => res.json()),
+                    fetch(`http://localhost:5001/api/uncompleted-gened/${studentId}`).then(res => res.json()),
+                    fetch(`http://localhost:5001/api/completed-major-required/${studentId}`).then(res => res.json()),
+                    fetch(`http://localhost:5001/api/uncompleted-major-required/${studentId}`).then(res => res.json()),
+                    fetch(`http://localhost:5001/api/completed-major-elective/${studentId}`).then(res => res.json()),
+                    fetch(`http://localhost:5001/api/uncompleted-major-elective/${studentId}`).then(res => res.json()),
+                ]);
+
+                setCompletedGenedSubjects(genedCompleted.map(item => ({
+                    code: item.courseid,
+                    name: item.coursename,
+                    credits: item.credits,
+                    grade: item.grade || "-"
+                })));
+                setUncompletedGenedSubjects(genedUncompleted.map(item => ({
+                    code: item.courseid,
+                    name: item.coursename,
+                    credits: item.credits,
+                    grade: "-"
+                })));
+                setCompletedMajorSubjectsReq(majorReqCompleted.map(item => ({
+                    code: item.courseid,
+                    name: item.coursename,
+                    credits: item.credits,
+                    grade: item.grade || "-"
+                })));
+                setUncompletedMajorSubjectsReq(majorReqUncompleted.map(item => ({
+                    code: item.courseid,
+                    name: item.coursename,
+                    credits: item.credits,
+                    grade: "-"
+                })));
+                setCompletedMajorSubjectsOptional(majorOptCompleted.map(item => ({
+                    code: item.courseid,
+                    name: item.coursename,
+                    credits: item.credits,
+                    grade: item.grade || "-"
+                })));
+                setUncompletedMajorSubjectsOptional(majorOptUncompleted.map(item => ({
+                    code: item.courseid,
+                    name: item.coursename,
+                    credits: item.credits,
+                    grade: "-"
+                })));
+            } catch (error) {
+                console.error("Error fetching subjects data:", error);
+            }
+        };
+
         fetchGPSData();
         fetchCreditsData();
         fetchGenMajor();
+        fetchSubjects();
     }, []);
 
     const handleSemesterChange = (event) => {
@@ -92,56 +152,28 @@ const HomePage = () => {
         }
     };
 
-    // Function to open popup with given title and subjects
-    const openPopupGened = (title, completed, uncompleted) => {
+    const openPopupGened = (title) => {
         setPopupTitle(title);
-        setPopupSubjects({ completed, uncompleted });
+        setPopupSubjects({ completed: completedGenedSubjects, uncompleted: uncompletedGenedSubjects });
         setIsPopupOpen(true);
-        setIsMajorPopup(false); // Set to use Popup (2-toggle)
+        setIsMajorPopup(false);
     };
-    const openPopupMajor = (title, completedReq, uncompletedReq, completedOpt, uncompletedOpt) => {
+
+    const openPopupMajor = (title) => {
         setPopupTitle(title);
         setPopupSubjects({
-            completedRequired: completedReq,
-            uncompletedRequired: uncompletedReq,
-            completedOptional: completedOpt,
-            uncompletedOptional: uncompletedOpt,
+            completedRequired: completedMajorSubjectsReq,
+            uncompletedRequired: uncompletedMajorSubjectsReq,
+            completedOptional: completedMajorSubjectsOptional,
+            uncompletedOptional: uncompletedMajorSubjectsOptional,
         });
         setIsPopupOpen(true);
-        setIsMajorPopup(true); // Set to use Popup2 (4-toggle)
+        setIsMajorPopup(true);
     };
-    // Function to close the popup
+
     const closePopup = () => {
         setIsPopupOpen(false);
     };
-
-    const completedGenedSubjects = [
-        { code: "90000000", name: "Art of emotion", credits: 3, grade: "A" },
-        { code: "90000001", name: "Fun with coding", credits: 3, grade: "A" },
-        { code: "90000002", name: "English For Communication", credits: 3, grade: "A" },
-    ];
-    const uncompletedGenedSubjects = [
-        { code: "90000003", name: "Critical Thinking", credits: 3, grade: "-" },
-        { code: "90000004", name: "Introduction to Philosophy", credits: 3, grade: "-" },
-    ];
-    const completedMajorSubjectsReq = [
-        { code: "90000000", name: "Programming Fundamental", credits: 3, grade: "A" },
-        { code: "90000001", name: "Datacom", credits: 3, grade: "A" },
-        { code: "90000002", name: "Calculus", credits: 3, grade: "A" },
-    ];
-    const uncompletedMajorSubjectsReq = [
-        { code: "90000003", name: "Computer Graphics", credits: 3, grade: "-" },
-        { code: "90000004", name: "Software Engineering", credits: 3, grade: "-" },
-    ];
-    const completedMajorSubjectsOptional = [
-        { code: "90000000", name: "Data Mining", credits: 3, grade: "A" },
-        { code: "90000001", name: "Blockchain", credits: 3, grade: "A" },
-        { code: "90000002", name: "Software Design", credits: 3, grade: "A" },
-    ];
-    const uncompletedMajorSubjectsOptional = [
-        { code: "90000003", name: "Machine Learning", credits: 3, grade: "-" },
-        { code: "90000004", name: "Cyber Security", credits: 6, grade: "-" },
-    ];
 
     return (
         <div className="homepage-container">

@@ -12,12 +12,29 @@
 }
 
 .popup-content {
-    background: white;
+    display: flex; /* Add this line */
+    flex-direction: column; /* Ensure content is laid out vertically */
+    background-color: white;
     padding: 20px;
+    width: 600px;
+    height: 300px;
+    overflow-y: auto;
     border-radius: 8px;
-    width: 80%;
-    max-width: 500px;
-    text-align: center;
+    position: relative;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px; /* Optional: Add some padding for better spacing */
+}
+
+.close-icon {
+    cursor: pointer;
+    color: #888;
+    font-size: 24px;
+    margin-left: auto; /* This will push the icon to the right */
 }
 
 table {
@@ -32,7 +49,7 @@ table td {
     padding: 8px;
 }
 
-button {
+.button {
     margin-top: 15px;
     padding: 8px 16px;
     background-color: #333;
@@ -40,6 +57,7 @@ button {
     border: none;
     cursor: pointer;
 }
+
 .toggle-buttons {
     display: flex;
     justify-content: center;
@@ -64,4 +82,14 @@ button {
 
 .toggle-buttons button:not(:last-child) {
     margin-right: 5px;
+}
+
+.table-container {
+    max-height: 50vh; /* Limit height for table */
+    overflow-y: auto;
+}
+
+.active {
+    background-color: #007bff;
+    color: white;
 }

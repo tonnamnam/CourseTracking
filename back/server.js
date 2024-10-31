@@ -279,6 +279,111 @@ app.get('/api/notifications', async (req, res) => {
   }
 });
 
+// 1. วิชาเลือกภาคที่ยังไม่เรียน
+app.get("/api/uncompleted-major-elective/:studentid", async (req, res) => {
+  try {
+      const { studentid } = req.params;
+      const result = await pool.query(`
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits
+          FROM course cr
+          WHERE cr.courseid NOT IN (
+              SELECT en.courseid FROM enrollment en WHERE en.studentid = $1
+          )
+          AND cr.courseid like '0550____' AND cr.requirementtype = 'elective'
+          ORDER BY cr.courseid
+      `, [studentid]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+// 2. วิชาเลือกภาคที่เรียนไปแล้ว
+app.get("/api/completed-major-elective/:studentid", async (req, res) => {
+  try {
+      const { studentid } = req.params;
+      const result = await pool.query(`
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade
+          FROM enrollment en
+          JOIN course cr ON cr.courseid = en.courseid
+          WHERE en.studentid = $1 AND cr.courseid LIKE '0550____' AND cr.requirementtype = 'elective'
+      `, [studentid]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+// 3. วิชาบังคับภาคที่เรียนไปแล้ว
+app.get("/api/completed-major-required/:studentid", async (req, res) => {
+  try {
+      const { studentid } = req.params;
+      const result = await pool.query(`
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade
+          FROM enrollment en
+          JOIN course cr ON cr.courseid = en.courseid
+          WHERE en.studentid = $1 AND cr.courseid LIKE '0550____' AND cr.requirementtype = 'required'
+      `, [studentid]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+// 4. วิชาบังคับภาคที่ยังไม่เรียน
+app.get("/api/uncompleted-major-required/:studentid", async (req, res) => {
+  try {
+      const { studentid } = req.params;
+      const result = await pool.query(`
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits
+          FROM course cr
+          WHERE cr.courseid NOT IN (
+              SELECT en.courseid FROM enrollment en WHERE en.studentid = $1
+          )
+          AND cr.courseid LIKE '0550____' AND cr.requirementtype = 'required'
+          ORDER BY cr.courseid
+      `, [studentid]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+// 5. วิชา Gened ที่ยังไม่ได้เรียน
+app.get("/api/uncompleted-gened/:studentid", async (req, res) => {
+  try {
+      const { studentid } = req.params;
+      const result = await pool.query(`
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits
+          FROM course cr
+          WHERE cr.courseid NOT IN (
+              SELECT en.courseid FROM enrollment en WHERE en.studentid = $1
+          )
+          AND cr.courseid LIKE '90______'
+          ORDER BY cr.courseid
+      `, [studentid]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
+// 6. วิชา Gened ที่เรียนไปแล้ว
+app.get("/api/completed-gened/:studentid", async (req, res) => {
+  try {
+      const { studentid } = req.params;
+      const result = await pool.query(`
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade
+          FROM enrollment en
+          JOIN course cr ON cr.courseid = en.courseid
+          WHERE en.studentid = $1 AND cr.courseid LIKE '90______'
+      `, [studentid]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+  }
+});
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close"; // Import the Close icon from Material-UI
 import "../styles/Popup.css";
 
 const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
@@ -11,7 +12,10 @@ const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
     return (
         <div className="popup-overlay">
             <div className="popup-content">
-                <h3>{title}</h3>
+                <div className="popup-header">
+                    <h3>{title}</h3>
+                    <CloseIcon className="close-icon" onClick={closePopup} /> {/* Use Material-UI CloseIcon */}
+                </div>
                 
                 {/* Four toggle buttons */}
                 <div className="toggle-buttons">
@@ -62,8 +66,6 @@ const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
                         ))}
                     </tbody>
                 </table>
-
-                <button onClick={closePopup}>Close</button>
             </div>
         </div>
     );
