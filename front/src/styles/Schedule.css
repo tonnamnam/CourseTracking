@@ -54,7 +54,7 @@
     /* ลดความสูง */
     padding: 2px;
     /* ลด padding */
-    font-size: 0.6rem;
+    font-size: 0.9rem;
     /* ลดขนาดฟอนต์ */
     text-align: center;
     border: 1px solid #ddd;
@@ -93,7 +93,7 @@
 
 .course-card .course-name {
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;

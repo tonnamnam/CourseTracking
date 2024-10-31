@@ -70,10 +70,12 @@ const Schedule = () => {
   }, []);
 
   const getRandomColor = () => {
-    const colors = ['#4CAF50', '#2196F3', '#9F0D7F', '#FF9800', '#E91E63', '#673AB7', '#3F51B5', '#009688'];
-    return colors[Math.floor(Math.random() * colors.length)];
+    let randomColor;
+    do {
+      randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    } while (randomColor === '#FFFFFF');
+    return randomColor;
   };
-
   // Generate time slots with 15-minute intervals
   const timeSlots = [];
   for (let hour = 8; hour < 20; hour++) {
