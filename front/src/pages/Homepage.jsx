@@ -249,7 +249,7 @@ const HomePage = () => {
                     <div className="info-box">
                         <div className="container-head">
                             <h3>วิชาภาค</h3>
-                            <p onClick={() => openPopupMajor("Major Subjects", completedMajorSubjectsReq, uncompletedMajorSubjectsReq, completedMajorSubjectsOptional, uncompletedMajorSubjectsOptional)}>
+                            <p onClick={() => openPopupMajor("วิชาภาค", completedMajorSubjectsReq, uncompletedMajorSubjectsReq, completedMajorSubjectsOptional, uncompletedMajorSubjectsOptional)}>
                                 ดูวิชาเรียน
                             </p>
                         </div>

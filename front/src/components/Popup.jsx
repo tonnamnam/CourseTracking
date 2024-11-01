@@ -10,30 +10,30 @@ const Popup = ({ title, completedSubjects, uncompletedSubjects, closePopup }) =>
     };
 
     return (
-        <div className="popup-overlay">
-            <div className="popup-content">
-                {/* Wrap header and close icon */}
-                <div className="popup-header">
-                    <h3>{title}</h3>
-                    <CloseIcon className="close-icon" onClick={closePopup} />
+        <div className="popup-overlay" onClick={closePopup}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                <div className="header">
+                    <div className="popup-header">
+                        <h3>{title}</h3>
+                        <CloseIcon className="close-icon" onClick={closePopup} />
+                    </div>
+
+                    {/* Toggle buttons */}
+                    <div className="toggle-buttons">
+                        <button
+                            className={selectedTab === "completed" ? "active" : ""}
+                            onClick={() => toggleTab("completed")}
+                        >
+                            วิชาเลือกที่เรียนไปแล้ว
+                        </button>
+                        <button
+                            className={selectedTab === "uncompleted" ? "active" : ""}
+                            onClick={() => toggleTab("uncompleted")}
+                        >
+                            วิชาเลือกที่ยังไม่เรียน
+                        </button>
+                    </div>
                 </div>
-                
-                {/* Toggle buttons */}
-                <div className="toggle-buttons">
-                    <button 
-                        className={selectedTab === "completed" ? "active" : ""} 
-                        onClick={() => toggleTab("completed")}
-                    >
-                        วิชาเลือกที่เรียนไปแล้ว
-                    </button>
-                    <button 
-                        className={selectedTab === "uncompleted" ? "active" : ""} 
-                        onClick={() => toggleTab("uncompleted")}
-                    >
-                        วิชาเลือกที่ยังไม่เรียน
-                    </button>
-                </div>
-                
                 {/* Table content based on selected tab */}
                 <div className="popup-table">
                     <table>

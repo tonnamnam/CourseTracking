@@ -10,13 +10,13 @@ const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
     };
 
     return (
-        <div className="popup-overlay">
-            <div className="popup-content">
+        <div className="popup-overlay" onClick={closePopup}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
                 <div className="popup-header">
                     <h3>{title}</h3>
                     <CloseIcon className="close-icon" onClick={closePopup} /> {/* Use Material-UI CloseIcon */}
                 </div>
-                
+
                 {/* Four toggle buttons */}
                 <div className="toggle-buttons">
                     <button
@@ -44,7 +44,7 @@ const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
                         วิชาเลือกที่ยังไม่เรียน
                     </button>
                 </div>
-                
+
                 {/* Table content based on selected tab */}
                 <table>
                     <thead>

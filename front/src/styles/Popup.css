@@ -12,29 +12,43 @@
 }
 
 .popup-content {
-    display: flex; /* Add this line */
-    flex-direction: column; /* Ensure content is laid out vertically */
+    display: flex;
+    flex-direction: column;
     background-color: white;
     padding: 20px;
+    padding-top: 0px;
     width: 600px;
-    height: 300px;
+    height: 500px;
     overflow-y: auto;
     border-radius: 8px;
     position: relative;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 150;
 }
 
 .popup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px; /* Optional: Add some padding for better spacing */
+    padding: 10px;
+    font-size: 20px;
+    position: sticky;
+    top: 0;
+    height: 80px;
+    background-color: white;
+    z-index: 150;
 }
 
 .close-icon {
     cursor: pointer;
     color: #888;
     font-size: 24px;
-    margin-left: auto; /* This will push the icon to the right */
+    margin-left: auto;
 }
 
 table {
@@ -49,6 +63,11 @@ table td {
     padding: 8px;
 }
 
+table td:nth-child(3),
+table td:nth-child(4) {
+    text-align: center;
+}
+
 .button {
     margin-top: 15px;
     padding: 8px 16px;
@@ -60,8 +79,12 @@ table td {
 
 .toggle-buttons {
     display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+    justify-content: left;
+    padding-bottom: 15px;
+    position: sticky;
+    top: 99px;
+    background-color: white;
+    z-index: 200;
 }
 
 .toggle-buttons button {
@@ -70,7 +93,7 @@ table td {
     cursor: pointer;
     background-color: #f0f0f0;
     color: #333;
-    border-radius: 5px 5px 0 0;
+    border-radius: 20px;
     outline: none;
     transition: background-color 0.3s;
 }
@@ -85,11 +108,7 @@ table td {
 }
 
 .table-container {
-    max-height: 50vh; /* Limit height for table */
+    max-height: 50vh;
+    /* Limit height for table */
     overflow-y: auto;
-}
-
-.active {
-    background-color: #007bff;
-    color: white;
 }
