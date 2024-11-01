@@ -12,37 +12,39 @@ const Popup2 = ({ title, subjectsByCategory, closePopup }) => {
     return (
         <div className="popup-overlay" onClick={closePopup}>
             <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                <div className="popup-header">
-                    <h3>{title}</h3>
-                    <CloseIcon className="close-icon" onClick={closePopup} /> {/* Use Material-UI CloseIcon */}
-                </div>
+                <div className="header">
+                    <div className="popup-header">
+                        <h3>{title}</h3>
+                        <CloseIcon className="close-icon" onClick={closePopup} /> {/* Use Material-UI CloseIcon */}
+                    </div>
 
-                {/* Four toggle buttons */}
-                <div className="toggle-buttons">
-                    <button
-                        className={selectedTab === "completedRequired" ? "active" : ""}
-                        onClick={() => toggleTab("completedRequired")}
-                    >
-                        วิชาบังคับที่เรียนไปแล้ว
-                    </button>
-                    <button
-                        className={selectedTab === "uncompletedRequired" ? "active" : ""}
-                        onClick={() => toggleTab("uncompletedRequired")}
-                    >
-                        วิชาบังคับที่ยังไม่เรียน
-                    </button>
-                    <button
-                        className={selectedTab === "completedOptional" ? "active" : ""}
-                        onClick={() => toggleTab("completedOptional")}
-                    >
-                        วิชาเลือกที่เรียนไปแล้ว
-                    </button>
-                    <button
-                        className={selectedTab === "uncompletedOptional" ? "active" : ""}
-                        onClick={() => toggleTab("uncompletedOptional")}
-                    >
-                        วิชาเลือกที่ยังไม่เรียน
-                    </button>
+                    {/* Four toggle buttons */}
+                    <div className="toggle-buttons">
+                        <button
+                            className={selectedTab === "completedRequired" ? "active" : ""}
+                            onClick={() => toggleTab("completedRequired")}
+                        >
+                            วิชาบังคับที่เรียนไปแล้ว
+                        </button>
+                        <button
+                            className={selectedTab === "uncompletedRequired" ? "active" : ""}
+                            onClick={() => toggleTab("uncompletedRequired")}
+                        >
+                            วิชาบังคับที่ยังไม่เรียน
+                        </button>
+                        <button
+                            className={selectedTab === "completedOptional" ? "active" : ""}
+                            onClick={() => toggleTab("completedOptional")}
+                        >
+                            วิชาเลือกที่เรียนไปแล้ว
+                        </button>
+                        <button
+                            className={selectedTab === "uncompletedOptional" ? "active" : ""}
+                            onClick={() => toggleTab("uncompletedOptional")}
+                        >
+                            วิชาเลือกที่ยังไม่เรียน
+                        </button>
+                    </div>
                 </div>
 
                 {/* Table content based on selected tab */}
