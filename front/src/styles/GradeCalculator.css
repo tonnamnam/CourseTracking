@@ -1,0 +1,192 @@
+/* Layout containers */
+.app-container {
+  margin-top: 5vh;
+  display: flex;
+  margin-left: 20vw;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Main container styles */
+.grade-calculator-container {
+  margin: 2rem auto;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.grade-calculator-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+}
+
+.calculator-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.calculator-title {
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Course row styles */
+.course-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.input-field {
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  color: #495057;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+  outline: none;
+}
+
+.subject-input {
+  flex: 2;
+}
+
+.credits-input {
+  flex: 1;
+  max-width: 100px;
+}
+
+.select-field {
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  color: #495057;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  width: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-field:focus {
+  border-color: #4dabf7;
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+  outline: none;
+}
+
+/* Button styles */
+.button {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.add-button, .remove-button {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+.add-button {
+  background-color: #37b24d;
+  color: white;
+}
+
+.add-button:hover {
+  background-color: #2f9e44;
+}
+
+.remove-button {
+  background-color: #fa5252;
+  color: white;
+}
+
+.remove-button:hover {
+  background-color: #e03131;
+}
+
+.calculate-button {
+  background-color: #228be6;
+  color: white;
+  min-width: 120px;
+}
+
+.calculate-button:hover {
+  background-color: #1c7ed6;
+}
+
+/* Action row styles */
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e9ecef;
+}
+
+/* Result styles */
+.gpa-result {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-left: auto;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding-left: 0; /* Remove padding when sidebar is hidden/collapsed */
+  }
+
+  .grade-calculator-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .course-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-field,
+  .select-field {
+    width: 100%;
+    max-width: none;
+  }
+
+  .action-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .gpa-result {
+    width: 100%;
+    text-align: center;
+    margin: 1rem 0 0 0;
+  }
+}

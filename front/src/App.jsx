@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import HomePage from './pages/Homepage.jsx';
 import Schedule from './pages/Schedule.jsx';
 import CalGrade from './pages/CalGrade.jsx';
+import GradeCalculator from './pages/GradeCalculator.jsx';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/calgrade" element={<CalGrade />} />
+          <Route path="/gradeCalculator" element={<GradeCalculator />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

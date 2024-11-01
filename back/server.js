@@ -303,10 +303,12 @@ app.get("/api/completed-major-elective/:studentid", async (req, res) => {
   try {
       const { studentid } = req.params;
       const result = await pool.query(`
-          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade , en.semesterid , sm.year , sm.semesterid
           FROM enrollment en
           JOIN course cr ON cr.courseid = en.courseid
+          JOIN semester sm on sm.semesterid = en.semesterid
           WHERE en.studentid = $1 AND cr.courseid LIKE '0550____' AND cr.requirementtype = 'elective'
+          ORDER BY sm.year , sm.semesterid
       `, [studentid]);
       res.json(result.rows);
   } catch (err) {
@@ -319,10 +321,12 @@ app.get("/api/completed-major-required/:studentid", async (req, res) => {
   try {
       const { studentid } = req.params;
       const result = await pool.query(`
-          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade , sm.year , sm.semesterid
           FROM enrollment en
           JOIN course cr ON cr.courseid = en.courseid
+		      JOIN semester sm on sm.semesterid = en.semesterid
           WHERE en.studentid = $1 AND cr.courseid LIKE '0550____' AND cr.requirementtype = 'required'
+		      ORDER BY sm.year , sm.semesterid
       `, [studentid]);
       res.json(result.rows);
   } catch (err) {
@@ -373,10 +377,12 @@ app.get("/api/completed-gened/:studentid", async (req, res) => {
   try {
       const { studentid } = req.params;
       const result = await pool.query(`
-          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade
+          SELECT DISTINCT cr.courseid, cr.coursename, cr.credits, en.grade , sm.year , sm.semesterid
           FROM enrollment en
           JOIN course cr ON cr.courseid = en.courseid
+          JOIN semester sm on sm.semesterid = en.semesterid
           WHERE en.studentid = $1 AND cr.courseid LIKE '90______'
+          ORDER BY sm.year , sm.semesterid
       `, [studentid]);
       res.json(result.rows);
   } catch (err) {
