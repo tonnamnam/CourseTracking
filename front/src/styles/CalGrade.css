@@ -38,7 +38,7 @@
 }
 
 .calculate-button {
-    background-color: #ff6f3e;
+    background-color: #ff6f3e !important;
     color: white;
     border: none;
     padding: 8px 20px;

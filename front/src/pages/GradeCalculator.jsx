@@ -4,7 +4,8 @@ import Navbar from "../components/Navbar.jsx";
 import '../styles/GradeCalculator.css';
 
 const GradeCalculator = () => {
-  const [courses, setCourses] = useState([{ subject: '', credits: '', grade: 'A' }]);
+  const initialCourses = [{ subject: '', credits: '', grade: 'A' }];
+  const [courses, setCourses] = useState(initialCourses);
   const [showResult, setShowResult] = useState(false);
   const [gpaResult, setGpaResult] = useState('0.00');
 
@@ -39,17 +40,23 @@ const GradeCalculator = () => {
     setShowResult(true);
   };
 
+  const resetData = () => {
+    setCourses(initialCourses);
+    setGpaResult('0.00');
+    setShowResult(false);
+  };
+
   return (
     <div className="app-container">
       <Sidebar />
+      <Navbar />
       <div className="main-content">
-        <Navbar />
         <div className="grade-calculator-container">
           <div className="grade-calculator-content">
             <div className="calculator-header">
-              <h1 className="calculator-title">เครื่องคำนวณเกรดเฉลี่ย</h1>
+              <h1 className="calculator-title">คำนวณเกรดเฉลี่ย</h1>
             </div>
-            
+
             {courses.map((course, index) => (
               <div key={index} className="course-row">
                 <input
@@ -81,8 +88,8 @@ const GradeCalculator = () => {
                   <option value="F">F</option>
                 </select>
                 {courses.length > 1 && (
-                  <button 
-                    onClick={() => removeCourse(index)} 
+                  <button
+                    onClick={() => removeCourse(index)}
                     className="button remove-button"
                     aria-label="ลบรายวิชา"
                   >
@@ -91,26 +98,32 @@ const GradeCalculator = () => {
                 )}
               </div>
             ))}
-            
+
             <div className="action-row">
-              <button 
-                onClick={addCourse} 
+              <button
+                onClick={addCourse}
                 className="button add-button"
                 aria-label="เพิ่มรายวิชา"
               >
                 +
               </button>
-              <button 
-                onClick={calculateGPA} 
-                className="button calculate-button"
-              >
-                คำนวณ
-              </button>
-              {showResult && (
-                <div className="gpa-result">
-                  เกรดเฉลี่ย: {gpaResult}
-                </div>
-              )}
+              <div className='buttongroup'>
+                <button
+                  onClick={resetData}
+                  className="button reset-button"
+                >
+                  ล้างข้อมูล
+                </button>
+                <button
+                  onClick={calculateGPA}
+                  className="button calculate-button"
+                >
+                  คำนวณ
+                </button>
+              </div>
+              <div className="gpa-result">
+                เกรดเฉลี่ย: {gpaResult}
+              </div>
             </div>
           </div>
         </div>

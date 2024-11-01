@@ -20,11 +20,11 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .calculator-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-align: center;
 }
 
@@ -32,6 +32,7 @@
   color: #2c3e50;
   font-size: 2rem;
   font-weight: 600;
+  font-size: 24px;
   margin-bottom: 0.5rem;
 }
 
@@ -41,6 +42,7 @@
   gap: 1rem;
   margin-bottom: 1rem;
   align-items: center;
+  justify-content: space-between;
 }
 
 .input-field {
@@ -48,13 +50,13 @@
   border: 2px solid #e9ecef;
   border-radius: 8px;
   color: #495057;
-  font-size: 1rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem;
   transition: all 0.3s ease;
 }
 
 .input-field:focus {
   border-color: #4dabf7;
+  font-size: 16px;
   box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
   outline: none;
 }
@@ -73,11 +75,12 @@
   border: 2px solid #e9ecef;
   border-radius: 8px;
   color: #495057;
-  font-size: 1rem;
-  padding: 0.75rem 1rem;
+  font-size: 16px;
   width: 100px;
+  height: 35px;
   cursor: pointer;
   transition: all 0.3s ease;
+  line-height: normal;
 }
 
 .select-field:focus {
@@ -97,15 +100,17 @@
   transition: all 0.3s ease;
 }
 
-.add-button, .remove-button {
+.add-button,
+.remove-button {
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 20px;
   padding: 0;
+  margin-top: 0;
 }
 
 .add-button {
@@ -127,40 +132,60 @@
 }
 
 .calculate-button {
-  background-color: #228be6;
+  background-color: #ff6f3e !important;
   color: white;
-  min-width: 120px;
+  border: none;
+  padding: 8px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
 }
 
 .calculate-button:hover {
-  background-color: #1c7ed6;
+  background-color: #e65c2c;
 }
 
-/* Action row styles */
+.reset-button {
+  background-color: #373737 !important;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.buttongroup {
+  display: flex;
+  gap: 1.75rem;
+}
+
 .action-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 2px solid #e9ecef;
 }
 
-/* Result styles */
 .gpa-result {
-  background-color: #f8f9fa;
   border-radius: 8px;
   color: #2c3e50;
-  font-size: 1.25rem;
+  font-size: 18px;
   font-weight: 600;
-  margin-left: auto;
-  padding: 0.75rem 1.5rem;
+  margin-left: -85px;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .main-content {
-    padding-left: 0; /* Remove padding when sidebar is hidden/collapsed */
+    padding-left: 0;
+    /* Remove padding when sidebar is hidden/collapsed */
   }
 
   .grade-calculator-container {
