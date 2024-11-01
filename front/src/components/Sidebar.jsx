@@ -33,7 +33,7 @@ const Sidebar = () => {
                     </ListItem>
                     <ListItem disablePadding>
                         <ListItemButton sx={{ marginBottom: 1 }} onClick={() => navigate('/calgrade')}>
-                            <Typography>คำนวณเกรด</Typography>
+                            <Typography>คำนวณเกรดตามเป้าหมาย</Typography>
                         </ListItemButton>
                     </ListItem>
                 </List>
